@@ -1,7 +1,36 @@
 /* ==========================================================================
    ديم درون — نظام التصميم
-   الترتيب: الرموز ← الأساس ← التخطيط ← المكوّنات ← الرسوم ← الاستجابة
+   الترتيب: الخطوط ← الرموز ← الأساس ← التخطيط ← المكوّنات ← الرسوم ← الاستجابة
    ========================================================================== */
+
+/* ---------- 0. خطوط ثمانية ----------
+   ثلاثة أوزان من Sans وقصّتان من Serif. الأوزان مُعلنة كنطاقات حتى يتحوّل
+   أي وزن في الشيفرة إلى أقرب ملف حقيقي بدل أن يصطنع المتصفح وزنًا ثقيلًا. */
+@font-face {
+  font-family: "Thmanyah Sans";
+  src: url("../fonts/thmanyah-sans-regular.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Thmanyah Sans";
+  src: url("../fonts/thmanyah-sans-medium.woff2") format("woff2");
+  font-weight: 500 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Thmanyah Sans";
+  src: url("../fonts/thmanyah-sans-black.woff2") format("woff2");
+  font-weight: 700 900; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Thmanyah Display";
+  src: url("../fonts/thmanyah-serif-display-medium.woff2") format("woff2");
+  font-weight: 400 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Thmanyah Text";
+  src: url("../fonts/thmanyah-serif-text-regular.woff2") format("woff2");
+  font-weight: 400 600; font-style: normal; font-display: swap;
+}
 
 /* ---------- 1. الرموز (Design tokens) ---------- */
 :root {
@@ -46,7 +75,14 @@
   --shadow-1: 0 1px 2px rgba(10, 37, 64, .06), 0 4px 16px rgba(10, 37, 64, .05);
   --shadow-2: 0 2px 6px rgba(10, 37, 64, .08), 0 18px 48px rgba(10, 37, 64, .10);
   --wrap: 1160px;
-  --font: "Tajawal", "Cairo", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+  /* الطباعة: Sans للواجهة والمتن، Display للعناوين، Text للفقرات التمهيدية */
+  --font: "Thmanyah Sans", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Thmanyah Display", "Thmanyah Sans", Georgia, serif;
+  --font-text: "Thmanyah Text", "Thmanyah Sans", Georgia, serif;
+
+  /* حركة */
+  --ease: cubic-bezier(.22, .61, .36, 1);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -124,10 +160,12 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4 { line-height: 1.3; margin: 0 0 .5em; font-weight: 700; letter-spacing: -.01em; }
-h1 { font-size: clamp(2rem, 5vw, 3.35rem); }
-h2 { font-size: clamp(1.5rem, 3.2vw, 2.2rem); }
-h3 { font-size: 1.2rem; }
+h1, h2, h3, h4 { line-height: 1.32; margin: 0 0 .5em; letter-spacing: 0; }
+h1, h2 { font-family: var(--font-display); font-weight: 500; line-height: 1.25; }
+h3, h4 { font-family: var(--font); font-weight: 600; }
+h1 { font-size: clamp(2.05rem, 5vw, 3.4rem); }
+h2 { font-size: clamp(1.55rem, 3.2vw, 2.3rem); }
+h3 { font-size: 1.18rem; }
 p { margin: 0 0 1em; }
 a { color: var(--brand-strong); text-decoration-thickness: 1px; text-underline-offset: 3px; }
 img, svg { max-width: 100%; }
@@ -151,11 +189,14 @@ ul, ol { padding-inline-start: 1.3em; }
 .section--wash { background: var(--surface-2); }
 
 .eyebrow {
-  display: inline-block; font-size: .82rem; font-weight: 700; letter-spacing: .08em;
+  display: inline-block; font-size: .82rem; font-weight: 600; letter-spacing: .04em;
   color: var(--brand-strong); background: var(--brand-wash);
-  padding: .32rem .8rem; border-radius: 999px; margin-bottom: 1rem;
+  padding: .34rem .85rem; border-radius: 999px; margin-bottom: 1rem;
 }
-.lede { font-size: 1.14rem; color: var(--ink-2); max-width: 62ch; }
+.lede {
+  font-family: var(--font-text); font-size: 1.17rem; line-height: 1.8;
+  color: var(--ink-2); max-width: 62ch;
+}
 .section-head { max-width: 68ch; margin-bottom: 2.5rem; }
 .center { text-align: center; margin-inline: auto; }
 
@@ -183,7 +224,7 @@ ul, ol { padding-inline-start: 1.3em; }
   padding: .5rem .75rem; border-radius: var(--r-sm);
 }
 .nav__links a:hover { background: var(--surface-2); color: var(--ink-1); }
-.nav__links a[aria-current="page"] { color: var(--brand-strong); background: var(--brand-wash); font-weight: 700; }
+.nav__links a[aria-current="page"] { color: var(--brand-strong); background: var(--brand-wash); font-weight: 600; }
 
 .nav__actions { display: flex; align-items: center; gap: .5rem; }
 .nav__toggle, .theme-toggle {
@@ -197,7 +238,7 @@ ul, ol { padding-inline-start: 1.3em; }
 /* ---------- 4. الأزرار ---------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
-  font: inherit; font-weight: 700; font-size: 1rem;
+  font: inherit; font-weight: 600; font-size: 1rem;
   padding: .8rem 1.5rem; border-radius: 999px; border: 1px solid transparent;
   cursor: pointer; text-decoration: none; transition: transform .12s ease, box-shadow .2s ease, background .2s ease;
 }
@@ -262,10 +303,10 @@ ul, ol { padding-inline-start: 1.3em; }
 .table-wrap { overflow-x: auto; border: 1px solid var(--hairline); border-radius: var(--r-md); background: var(--surface-1); }
 table { width: 100%; border-collapse: collapse; font-size: .95rem; }
 th, td { padding: .8rem 1rem; text-align: start; border-bottom: 1px solid var(--hairline); }
-th { font-weight: 700; color: var(--ink-2); background: var(--surface-2); font-size: .88rem; white-space: nowrap; }
+th { font-weight: 600; color: var(--ink-2); background: var(--surface-2); font-size: .88rem; white-space: nowrap; }
 tbody tr:last-child td { border-bottom: 0; }
 td.num, th.num { font-variant-numeric: tabular-nums; }
-.tick { color: var(--success-text); font-weight: 700; }
+.tick { color: var(--success-text); font-weight: 600; }
 .cross { color: var(--ink-muted); }
 
 /* ---------- 8. الخطوات، الأسئلة، الشهادات ---------- */
@@ -276,7 +317,7 @@ td.num, th.num { font-variant-numeric: tabular-nums; }
   position: absolute; top: 0; inset-inline-start: 0;
   width: 42px; height: 42px; border-radius: 50%;
   background: var(--brand-wash); color: var(--brand-strong);
-  display: grid; place-items: center; font-weight: 800; font-size: 1.05rem;
+  display: grid; place-items: center; font-weight: 700; font-size: 1.05rem;
 }
 .step h3 { font-size: 1.05rem; }
 .step p { font-size: .95rem; color: var(--ink-2); margin: 0; }
@@ -285,16 +326,16 @@ details.faq {
   border: 1px solid var(--hairline); border-radius: var(--r-md);
   background: var(--surface-1); padding: 1rem 1.3rem; margin-bottom: .75rem;
 }
-details.faq summary { font-weight: 700; cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 1rem; }
+details.faq summary { font-weight: 600; cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 1rem; }
 details.faq summary::-webkit-details-marker { display: none; }
 details.faq summary::after { content: "+"; color: var(--brand-strong); font-size: 1.4rem; line-height: 1; }
 details.faq[open] summary::after { content: "−"; }
 details.faq p { margin: .8rem 0 0; color: var(--ink-2); }
 
-.quote { background: var(--surface-1); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 1.6rem; }
-.quote p { font-size: 1.02rem; }
+.quote { background: var(--surface-1); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 1.6rem; margin: 0; }
+.quote p { font-family: var(--font-text); font-size: 1.05rem; line-height: 1.8; }
 .quote footer { display: flex; align-items: center; gap: .7rem; font-size: .9rem; color: var(--ink-2); }
-.avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--brand-wash); color: var(--brand-strong); display: grid; place-items: center; font-weight: 800; flex: none; }
+.avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--brand-wash); color: var(--brand-strong); display: grid; place-items: center; font-weight: 600; flex: none; }
 
 .chips { display: flex; flex-wrap: wrap; gap: .6rem; list-style: none; padding: 0; margin: 0; }
 .chips li {
@@ -318,7 +359,7 @@ details.faq p { margin: .8rem 0 0; color: var(--ink-2); }
 
 /* ---------- 9. النماذج ---------- */
 .form { display: grid; gap: 1.1rem; }
-.field label { display: block; font-weight: 700; font-size: .95rem; margin-bottom: .35rem; }
+.field label { display: block; font-weight: 600; font-size: .95rem; margin-bottom: .35rem; }
 .field .hint { font-size: .85rem; color: var(--ink-muted); font-weight: 500; }
 .field input, .field select, .field textarea {
   width: 100%; font: inherit; font-size: 1rem; color: var(--ink-1);
@@ -356,7 +397,7 @@ details.faq p { margin: .8rem 0 0; color: var(--ink-2); }
   border-radius: var(--r-md); padding: 1.3rem 1.4rem 1.1rem; box-shadow: var(--shadow-1);
 }
 .viz__head { display: flex; flex-wrap: wrap; align-items: flex-start; gap: .75rem; margin-bottom: 1rem; }
-.viz__title { font-size: 1.05rem; font-weight: 700; margin: 0; }
+.viz__title { font-size: 1.05rem; font-weight: 600; margin: 0; }
 .viz__sub { font-size: .87rem; color: var(--ink-muted); margin: .15rem 0 0; }
 .viz__actions { margin-inline-start: auto; display: flex; gap: .4rem; }
 .viz__btn {
@@ -387,7 +428,7 @@ details.faq p { margin: .8rem 0 0; color: var(--ink-2); }
 .g-axis { stroke: var(--axis); stroke-width: 1; }
 .g-tick { fill: var(--ink-muted); font-size: 11px; font-variant-numeric: tabular-nums; }
 .g-label { fill: var(--ink-2); font-size: 12px; font-weight: 600; }
-.g-value { fill: var(--ink-1); font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.g-value { fill: var(--ink-1); font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .g-band { fill: var(--ink-1); opacity: .035; }
 .g-hit { fill: transparent; cursor: crosshair; }
 .g-crosshair { stroke: var(--axis); stroke-width: 1; }
@@ -405,7 +446,7 @@ details.faq p { margin: .8rem 0 0; color: var(--ink-2); }
 .viz__tip .row { display: flex; align-items: center; gap: .45rem; justify-content: space-between; }
 .viz__tip .row i { width: 9px; height: 9px; border-radius: 2px; flex: none; }
 .viz__tip .row span { flex: 1; color: var(--ink-2); }
-.viz__tip .row em { font-style: normal; font-weight: 700; font-variant-numeric: tabular-nums; }
+.viz__tip .row em { font-style: normal; font-weight: 600; font-variant-numeric: tabular-nums; }
 
 /* ---------- 12. لوحة البوابة ---------- */
 .portal-shell { padding: 2rem 0 1rem; scroll-margin-top: 90px; }
@@ -422,7 +463,7 @@ details.faq p { margin: .8rem 0 0; color: var(--ink-2); }
 .hero-figure .label { font-size: .92rem; color: var(--ink-2); margin: 0; }
 .hero-figure .value { font-size: clamp(3rem, 8vw, 4.2rem); font-weight: 800; line-height: 1.05; margin: .2rem 0; }
 .hero-figure .unit { font-size: 1.1rem; font-weight: 600; color: var(--ink-muted); }
-.hero-figure .delta { font-size: .95rem; font-weight: 700; }
+.hero-figure .delta { font-size: .95rem; font-weight: 600; }
 .delta--up { color: var(--success-text); }
 .delta--down { color: var(--status-critical); }
 
@@ -431,12 +472,12 @@ details.faq p { margin: .8rem 0 0; color: var(--ink-2); }
   border-radius: var(--r-md); padding: 1.1rem 1.2rem;
 }
 .stat .label { font-size: .88rem; color: var(--ink-2); margin: 0 0 .25rem; }
-.stat .value { font-size: 1.6rem; font-weight: 700; line-height: 1.2; }
+.stat .value { font-size: 1.6rem; font-weight: 700; line-height: 1.2; letter-spacing: -.01em; }
 .stat .sub { font-size: .82rem; color: var(--ink-muted); }
 
 .status-pill {
   display: inline-flex; align-items: center; gap: .45rem;
-  font-size: .85rem; font-weight: 700; padding: .3rem .8rem; border-radius: 999px;
+  font-size: .85rem; font-weight: 600; padding: .3rem .8rem; border-radius: 999px;
   border: 1px solid var(--hairline);
 }
 .status-pill svg { width: 15px; height: 15px; }
@@ -461,7 +502,73 @@ details.faq p { margin: .8rem 0 0; color: var(--ink-2); }
 
 .is-hidden { display: none !important; }
 
-/* ---------- 13. الاستجابة ---------- */
+/* ==========================================================================
+   13. طبقة السلاسة — الحركة، الظهور عند التمرير، والعناصر الإقناعية
+   ========================================================================== */
+
+/* الظهور التدريجي عند التمرير. العنصر مرئي افتراضيًا وتُخفيه الشيفرة فقط
+   عندما تعمل (js-on)، حتى لا يختفي المحتوى إن تعطّلت JavaScript. */
+.js-on .reveal { opacity: 0; transform: translateY(18px); }
+.js-on .reveal.is-in {
+  opacity: 1; transform: none;
+  transition: opacity .6s var(--ease), transform .6s var(--ease);
+}
+.js-on .reveal:nth-child(2) { transition-delay: .06s; }
+.js-on .reveal:nth-child(3) { transition-delay: .12s; }
+.js-on .reveal:nth-child(4) { transition-delay: .18s; }
+.js-on .reveal:nth-child(5) { transition-delay: .24s; }
+.js-on .reveal:nth-child(6) { transition-delay: .3s; }
+
+/* ظل خفيف على الرأس بمجرد مغادرة أعلى الصفحة */
+.site-header { transition: box-shadow .25s var(--ease), background .25s var(--ease); }
+.site-header.is-stuck { box-shadow: 0 1px 0 var(--hairline), 0 8px 28px rgba(10, 37, 64, .07); }
+
+/* أزرار: ضغطة محسوسة + وهج زجاجي يمرّ عند التحويم */
+.btn { position: relative; overflow: hidden; }
+.btn--primary::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, .28) 50%, transparent 70%);
+  transform: translateX(-120%); transition: transform .7s var(--ease);
+}
+.btn--primary:hover::after { transform: translateX(120%); }
+
+/* بطاقات الخدمات: سهم يظهر عند التحويم بدل أن يكون ضجيجًا دائمًا */
+.card--link { position: relative; }
+.card--link::after {
+  content: "←"; position: absolute; inset-block-end: 1.3rem; inset-inline-start: 1.6rem;
+  color: var(--brand-strong); font-size: 1.2rem; opacity: 0;
+  transform: translateX(6px); transition: opacity .25s var(--ease), transform .25s var(--ease);
+}
+.card--link:hover::after, .card--link:focus-visible::after { opacity: 1; transform: none; }
+.card--link:hover .icon-badge { background: var(--brand); color: #fff; }
+.icon-badge { transition: background .25s var(--ease), color .25s var(--ease); }
+
+/* الأرقام المتصاعدة في الـ Hero */
+.hero__stats div strong { font-variant-numeric: proportional-nums; }
+
+/* شريط طمأنة — يعالج المخاطرة المتصوَّرة قبل أن تُصبح اعتراضًا */
+.assure {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+  background: var(--hairline); border: 1px solid var(--hairline);
+  border-radius: var(--r-md); overflow: hidden;
+}
+.assure > div { background: var(--surface-1); padding: 1.3rem 1.4rem; }
+.assure h3 { font-size: 1rem; margin-bottom: .25rem; display: flex; align-items: center; gap: .5rem; }
+.assure h3 svg { width: 18px; height: 18px; color: var(--brand); flex: none; }
+.assure p { margin: 0; font-size: .93rem; color: var(--ink-2); }
+
+/* شريط نداء ثابت أسفل شاشة الجوال — الزر الأهم يبقى في متناول الإبهام */
+.cta-dock {
+  position: fixed; inset-inline: 0; bottom: 0; z-index: 90;
+  display: none; gap: .6rem; padding: .7rem 1rem calc(.7rem + env(safe-area-inset-bottom));
+  background: color-mix(in srgb, var(--page) 92%, transparent);
+  backdrop-filter: blur(12px); border-top: 1px solid var(--hairline);
+  transform: translateY(110%); transition: transform .3s var(--ease);
+}
+.cta-dock.is-on { transform: none; }
+.cta-dock .btn { flex: 1; padding: .7rem 1rem; }
+
+/* ---------- 14. الاستجابة ---------- */
 @media (max-width: 1000px) {
   .grid--4 { grid-template-columns: repeat(2, 1fr); }
   .steps { grid-template-columns: repeat(2, 1fr); }
@@ -484,6 +591,12 @@ details.faq p { margin: .8rem 0 0; color: var(--ink-2); }
   .hero__stats { grid-template-columns: repeat(2, 1fr); gap: 1.5rem 1rem; }
 }
 
+@media (max-width: 860px) {
+  .assure { grid-template-columns: 1fr; }
+  .cta-dock { display: flex; }
+  .site-footer { padding-bottom: 6rem; }
+}
+
 @media (max-width: 560px) {
   body { font-size: 16px; }
   .grid--4, .steps, .footer-grid { grid-template-columns: 1fr; }
@@ -500,4 +613,7 @@ details.faq p { margin: .8rem 0 0; color: var(--ink-2); }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+  /* الظهور التدريجي يُلغى تمامًا لا يُسرَّع — المحتوى يبدأ ظاهرًا */
+  .js-on .reveal { opacity: 1 !important; transform: none !important; }
+  .btn:hover { transform: none; }
 }

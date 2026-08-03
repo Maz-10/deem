@@ -11,6 +11,8 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ar_SA">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/thmanyah-sans-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/thmanyah-serif-display-medium.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/style.css">
 <script type="application/ld+json">
 {
@@ -67,10 +69,29 @@
         <a class="btn btn--light" href="portal.html">شاهد بوابة العميل</a>
       </div>
       <div class="hero__stats">
-        <div><strong>1.2 مليون م²</strong><span>زجاج تم غسله</span></div>
-        <div><strong>340+</strong><span>مبنى في المملكة</span></div>
-        <div><strong>7,800</strong><span>ساعة طيران تشغيلي</span></div>
+        <div><strong data-count="1.2" data-decimals="1" data-suffix=" مليون م²">1.2 مليون م²</strong><span>زجاج تم غسله</span></div>
+        <div><strong data-count="340" data-suffix="+">340+</strong><span>مبنى في المملكة</span></div>
+        <div><strong data-count="7800">7,800</strong><span>ساعة طيران تشغيلي</span></div>
         <div><strong>صفر</strong><span>حوادث سقوط أو إصابة</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="wrap">
+      <div class="assure">
+        <div>
+          <h3><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 1.6a8.4 8.4 0 100 16.8 8.4 8.4 0 000-16.8zm4.1 6.3l-4.7 4.9a1 1 0 01-1.5 0L5.9 10.7a1 1 0 011.4-1.4l1.3 1.3 4-4.2a1 1 0 111.5 1.5z"/></svg>المسح مجاني ودون التزام</h3>
+          <p>ساعة واحدة في موقعك، والتقرير يبقى لك حتى لو لم تتعاقد معنا.</p>
+        </div>
+        <div>
+          <h3><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 1.6a8.4 8.4 0 100 16.8 8.4 8.4 0 000-16.8zm4.1 6.3l-4.7 4.9a1 1 0 01-1.5 0L5.9 10.7a1 1 0 011.4-1.4l1.3 1.3 4-4.2a1 1 0 111.5 1.5z"/></svg>تأجيل الطقس بلا رسوم</h3>
+          <p>إن أوقف مشرف السلامة العمل، نعيد الجدولة خلال 72 ساعة ولا تُحتسب الزيارة.</p>
+        </div>
+        <div>
+          <h3><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 1.6a8.4 8.4 0 100 16.8 8.4 8.4 0 000-16.8zm4.1 6.3l-4.7 4.9a1 1 0 01-1.5 0L5.9 10.7a1 1 0 011.4-1.4l1.3 1.3 4-4.2a1 1 0 111.5 1.5z"/></svg>زيارة تصحيحية مجانية</h3>
+          <p>إن هبط مؤشر نظافتك تحت الحد المتعاقد عليه، نعود دون رسوم ودون خصم من رصيدك.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -308,6 +329,12 @@
   </div>
 </footer>
 
+
+<!-- شريط النداء الثابت على الجوال -->
+<div class="cta-dock">
+  <a class="btn btn--primary" href="contact.html">احجز مسحًا مجانيًا</a>
+  <a class="btn btn--ghost" href="tel:+966500000000">اتصل</a>
+</div>
 <script src="assets/js/site.js" defer></script>
 <script src="assets/js/charts.js" defer></script>
 <script>

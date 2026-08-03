@@ -2,6 +2,12 @@
 (function () {
   "use strict";
 
+  /* تُعلَّم الصفحة مبكرًا حتى لا يومض المحتوى المخفي قبل تشغيل الظهور التدريجي.
+     بدونها يبقى كل شيء ظاهرًا — لا يعتمد المحتوى على JavaScript. */
+  document.documentElement.classList.add("js-on");
+
+  var REDUCED = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   /* ---------- السمة (فاتح/داكن) ---------- */
   var KEY = "deem-theme";
   var saved = null;
@@ -82,6 +88,76 @@
         form.reset();
       });
     });
+
+    /* ---------- الظهور التدريجي عند التمرير ---------- */
+    var targets = document.querySelectorAll(
+      ".section-head, .card, .quote, .step, .viz, .table-wrap, .cta-band, .assure > div, .hero__stats, details.faq"
+    );
+    if (!REDUCED && "IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          e.target.classList.add("is-in");
+          io.unobserve(e.target);
+        });
+      }, { rootMargin: "0px 0px -8% 0px", threshold: .06 });
+      Array.prototype.forEach.call(targets, function (t) {
+        t.classList.add("reveal");
+        io.observe(t);
+      });
+    }
+
+    /* ---------- ظل الرأس بعد مغادرة أعلى الصفحة ---------- */
+    var header = document.querySelector(".site-header");
+    var dock = document.querySelector(".cta-dock");
+    if (header || dock) {
+      var ticking = false;
+      var onScroll = function () {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(function () {
+          var y = window.pageYOffset;
+          if (header) header.classList.toggle("is-stuck", y > 8);
+          /* الشريط الثابت يظهر بعد تجاوز الـ Hero ويختفي عند التذييل حتى لا يغطّيه */
+          if (dock) {
+            var foot = document.querySelector(".site-footer");
+            var nearFoot = foot && foot.getBoundingClientRect().top < window.innerHeight - 40;
+            dock.classList.toggle("is-on", y > 520 && !nearFoot);
+          }
+          ticking = false;
+        });
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+    }
+
+    /* ---------- الأرقام المتصاعدة ---------- */
+    var counters = document.querySelectorAll("[data-count]");
+    if (counters.length && !REDUCED && "IntersectionObserver" in window) {
+      var cio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          cio.unobserve(e.target);
+          var node = e.target;
+          var end = parseFloat(node.getAttribute("data-count"));
+          var dec = (node.getAttribute("data-decimals") | 0);
+          var pre = node.getAttribute("data-prefix") || "";
+          var suf = node.getAttribute("data-suffix") || "";
+          var t0 = null, DUR = 1100;
+          var tick = function (ts) {
+            if (t0 === null) t0 = ts;
+            var k = Math.min(1, (ts - t0) / DUR);
+            var eased = 1 - Math.pow(1 - k, 3);
+            node.textContent = pre + (end * eased).toLocaleString("en-US", {
+              minimumFractionDigits: dec, maximumFractionDigits: dec
+            }) + suf;
+            if (k < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        });
+      }, { threshold: .4 });
+      Array.prototype.forEach.call(counters, function (c) { cio.observe(c); });
+    }
 
     /* ---------- حاسبة السعر التقديرية ---------- */
     var calc = document.querySelector("[data-calc]");
