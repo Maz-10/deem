@@ -102,32 +102,54 @@
     </div>
   </section>
 
-  <section class="section">
+  <section class="section" id="compare">
     <div class="wrap">
       <div class="section-head">
         <span class="eyebrow">لماذا الدرون؟</span>
-        <h2>المقارنة التي يهتم بها مدير المرافق</h2>
-        <p class="lede">ليست مسألة تقنية لامعة، بل حساب تكلفة ووقت ومسؤولية. هذه أرقام برج مكتبي من 30 طابقًا ومساحة زجاج 18,000 م².</p>
+        <h2>الغسيل بالحبال مقابل الغسيل بالدرون</h2>
+        <p class="lede">نفس المبنى، طريقتان: برج مكتبي من 30 طابقًا، ومساحة الزجاج 18,000 متر مربع.</p>
       </div>
-      <div class="table-wrap">
-        <table>
-          <caption class="is-hidden">مقارنة بين التنظيف بالحبال والتنظيف بالدرون</caption>
-          <thead>
-            <tr><th>المعيار</th><th>الحبال والسقالات</th><th>ديم درون</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>مدة التنفيذ</td><td>18 – 22 يوم عمل</td><td class="tick">3 – 4 أيام</td></tr>
-            <tr><td>عمّال على ارتفاع</td><td>6 – 10 أشخاص معلّقين</td><td class="tick">صفر</td></tr>
-            <tr><td>إغلاق الأرصفة ومواقف السيارات</td><td>مطلوب طوال المدة</td><td class="tick">نطاق أمان متنقّل لساعات</td></tr>
-            <tr><td>استهلاك المياه</td><td>~ 4 لتر / م²</td><td class="tick">~ 1.1 لتر / م²</td></tr>
-            <tr><td>مواد كيميائية</td><td>منظفات ومذيبات</td><td class="tick">ماء منزوع الأيونات فقط</td></tr>
-            <tr><td>الوصول للتصاميم المعقّدة</td><td>محدود بنقاط التثبيت</td><td class="tick">أي سطح ضمن نطاق الطيران</td></tr>
-            <tr><td>التوثيق بعد العمل</td><td>صور بالجوال إن وُجدت</td><td class="tick">مؤشر نظافة رقمي + مسح مصوّر</td></tr>
-            <tr><td>التكلفة النسبية</td><td>الأساس</td><td class="tick">أقل بـ 35 – 45%</td></tr>
-          </tbody>
-        </table>
+
+      <div class="compare-grid">
+        <div id="chart-compare"></div>
+
+        <div class="compare-side">
+          <div class="compare-stat">
+            <span class="compare-stat__big">‎−85%</span>
+            <span class="compare-stat__label">من زمن التنفيذ<br><small>من 20 يوم عمل إلى 3</small></span>
+          </div>
+          <div class="compare-stat">
+            <span class="compare-stat__big">صفر</span>
+            <span class="compare-stat__label">عامل معلّق على ارتفاع<br><small>بدل 6 – 10 أشخاص</small></span>
+          </div>
+          <div class="compare-stat">
+            <span class="compare-stat__big">‎−72%</span>
+            <span class="compare-stat__label">من استهلاك المياه<br><small>1.1 لتر/م² بدل 4</small></span>
+          </div>
+          <p class="form-note" style="margin:0">
+            متوسط مشاريعنا في الرياض وجدة 2025–2026. يختلف بحسب الارتفاع وتصميم الواجهة.
+          </p>
+        </div>
       </div>
-      <p class="form-note" style="margin-top:.9rem">الأرقام مبنية على متوسط مشاريعنا في الرياض وجدة خلال 2025–2026، وتختلف بحسب ارتفاع المبنى وتصميم الواجهة.</p>
+
+      <details class="compare-more">
+        <summary>الفروق التي لا تُقاس بالأرقام</summary>
+        <div class="table-wrap" data-stack>
+          <table>
+            <caption class="is-hidden">مقارنة تفصيلية بين التنظيف بالحبال والتنظيف بالدرون</caption>
+            <thead>
+              <tr><th>المعيار</th><th>الحبال والسقالات</th><th>ديم درون</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>إغلاق الأرصفة ومواقف السيارات</td><td>مطلوب طوال المدة</td><td class="tick">نطاق أمان متنقّل لساعات</td></tr>
+              <tr><td>مواد كيميائية</td><td>منظفات ومذيبات</td><td class="tick">ماء منزوع الأيونات فقط</td></tr>
+              <tr><td>الوصول للتصاميم المعقّدة</td><td>محدود بنقاط التثبيت</td><td class="tick">أي سطح ضمن نطاق الطيران</td></tr>
+              <tr><td>التوثيق بعد العمل</td><td>صور بالجوال إن وُجدت</td><td class="tick">مؤشر نظافة رقمي + مسح مصوّر</td></tr>
+              <tr><td>المسؤولية القانونية</td><td>تصريح عمل على ارتفاع لكل زيارة</td><td class="tick">لا أحد فوق الأرض</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
     </div>
   </section>
 
@@ -348,11 +370,25 @@
   <a class="btn btn--ghost" href="tel:+966500000000">اتصل</a>
 </div>
 <script src="assets/js/site.js" defer></script>
+<script src="assets/js/admin.js" defer></script>
 <script src="assets/js/charts.js" defer></script>
 <script>
   /* يُسجَّل الآن ويُنفَّذ بعد charts.js المؤجَّل — DOMContentLoaded يأتي بعد النصوص المؤجَّلة */
   document.addEventListener("DOMContentLoaded", function () {
     if (window.DeemCharts) {
+      window.DeemCharts.compare(document.getElementById("chart-compare"), {
+        title: "أربعة معايير يقيسها مدير المرافق",
+        subtitle: "لكل معيار وحدته ومقياسه — القيم مكتوبة على الأعمدة",
+        series: ["الحبال والسقالات", "ديم درون"],
+        rows: [
+          { label: "مدة التنفيذ", unit: "يوم عمل", a: 20, b: 3.5 },
+          { label: "عمّال على ارتفاع", unit: "شخص", a: 8, b: 0, note: "لا أحد يغادر الأرض" },
+          { label: "استهلاك المياه", unit: "لتر/م²", a: 4, b: 1.1 },
+          { label: "التكلفة النسبية", unit: "%", a: 100, b: 60 }
+        ],
+        footnote: "الأعمدة تُقارَن داخل الصفّ الواحد فقط — لكل معيار وحدة مختلفة."
+      });
+
       /* خط مصغّر بسلسلة واحدة — لا قيد فصل ألوان عليه، فيأخذ لون الهوية
          بدل لون السلاسل. أما رسوم البوابة فتبقى على اللوحة المُتحقَّق منها. */
       window.DeemCharts.spark(document.getElementById("home-spark"),

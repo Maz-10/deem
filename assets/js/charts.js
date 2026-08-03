@@ -482,7 +482,80 @@
   }
 
   /* ======================================================================
-     4) خط مصغّر (sparkline) — للمعاينة في الصفحة الرئيسية، بلا محاور
+     4) مقارنة مزدوجة — صفّان لكل معيار: الطريقة القديمة مقابل الدرون.
+     كل صفّ له وحدته ومقياسه الخاص (مضاعفات صغيرة)، لذلك تُكتب القيمة على
+     كل عمود ولا يُقارَن طول عمود بصفٍّ آخر — والوحدة مكتوبة في كل صفّ.
+     cfg: { title, subtitle, series:[اسم أ, اسم ب],
+            rows:[{label, unit, a, b, note}], footnote }
+     ====================================================================== */
+  function compareChart(host, cfg) {
+    var A = SERIES[0], B = SERIES[1];
+    var parts = buildShell(host, {
+      title: cfg.title, subtitle: cfg.subtitle, footnote: cfg.footnote,
+      legend: [{ label: cfg.series[0], color: B }, { label: cfg.series[1], color: A }]
+    });
+
+    renderTable(parts.table,
+      ["المعيار", cfg.series[0], cfg.series[1], "الفرق"],
+      cfg.rows.map(function (r) {
+        var diff = r.a === 0 ? "—" : Math.round((1 - r.b / r.a) * 100) + "% أقل";
+        return [r.label + " (" + r.unit + ")", fmt(r.a, 1), fmt(r.b, 1), diff];
+      }));
+
+    autoRender(host, function () {
+      var W = Math.max(260, parts.plot.clientWidth);
+      var barH = 14, gap = 8, headH = 24, rowH = headH + barH * 2 + gap + 22;
+      var H = cfg.rows.length * rowH;
+      /* اسم المعيار سطر مستقل بعرض الصفّ كامل — وضعُه بجانب الأعمدة يقصّه
+         على الشاشات الضيقة. الأعمدة تحته، ومساحة القيم محجوزة يسارها. */
+      var valueW = W < 400 ? 46 : 56;
+      var trackX = valueW, trackW = Math.max(50, W - valueW);
+      var baseX = W;
+
+      var svg = el("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H, role: "img" });
+      svg.appendChild(txt(el("title"), cfg.title));
+
+      cfg.rows.forEach(function (r, i) {
+        var top = i * rowH;
+        var lab = el("text", { x: W, y: top + 13, "text-anchor": "end", class: "g-label" });
+        svg.appendChild(txt(lab, r.label));
+        var unit = el("text", { x: 0, y: top + 13, "text-anchor": "start", class: "g-tick" });
+        svg.appendChild(txt(unit, r.unit));
+
+        var max = Math.max(r.a, r.b) || 1;
+        [{ v: r.a, c: B, n: cfg.series[0] }, { v: r.b, c: A, n: cfg.series[1] }].forEach(function (d, k) {
+          var y = top + headH + k * (barH + gap);
+          svg.appendChild(el("rect", { x: trackX, y: y, width: trackW, height: barH, rx: 4 },
+            "fill:var(--ink-1);opacity:.04"));
+          var w = (d.v / max) * trackW;
+          if (w > 1) {
+            svg.appendChild(el("path", { d: barPath(baseX - w, y, w, barH, 4, "left") }, "fill:" + d.c));
+          }
+          /* القيمة خارج الطرف دائمًا — الصفر يُكتب عند القاعدة */
+          var vx = w > 1 ? baseX - w - 8 : baseX - 8;
+          var vt = el("text", { x: vx, y: y + barH - 2, "text-anchor": "end", class: "g-value" });
+          svg.appendChild(txt(vt, fmt(d.v, d.v % 1 ? 1 : 0)));
+
+          var hit = el("rect", { x: 0, y: y - 3, width: W, height: barH + 6, class: "g-hit" });
+          hit.addEventListener("mousemove", function (ev) {
+            var rc = svg.getBoundingClientRect();
+            showTip(parts.tip, parts.plot, ev.clientX - rc.left, y + barH,
+              "<b>" + r.label + "</b>" + tipRow(d.c, d.n, fmt(d.v, 1) + " " + r.unit) +
+              (r.note ? '<div class="row"><span>' + r.note + "</span></div>" : ""));
+          });
+          hit.addEventListener("mouseleave", function () { hideTip(parts.tip); });
+          svg.appendChild(hit);
+        });
+      });
+
+      var old = parts.plot.querySelector("svg");
+      if (old) old.remove();
+      parts.plot.appendChild(svg);
+    });
+  }
+
+  /* ======================================================================
+     5) خط مصغّر (sparkline) — للمعاينة في الصفحة الرئيسية، بلا محاور
      ====================================================================== */
   function sparkline(host, values, opts) {
     opts = opts || {};
@@ -510,6 +583,7 @@
     line: lineChart,
     bars: barChart,
     stacked: stackedChart,
+    compare: compareChart,
     spark: sparkline,
     palette: SERIES,
     format: fmt

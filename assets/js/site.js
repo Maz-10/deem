@@ -89,6 +89,20 @@
       });
     });
 
+    /* ---------- تسميات خلايا الجداول المتحوّلة إلى بطاقات على الجوال ----------
+       تُقرأ مرة واحدة من رؤوس الجدول، فيبقى الـ HTML نظيفًا بلا تكرار يدوي. */
+    Array.prototype.forEach.call(document.querySelectorAll("[data-stack] table"), function (table) {
+      var heads = table.querySelectorAll("thead th");
+      if (!heads.length) return;
+      Array.prototype.forEach.call(table.querySelectorAll("tbody tr"), function (row) {
+        Array.prototype.forEach.call(row.children, function (cell, i) {
+          if (heads[i] && !cell.hasAttribute("data-label")) {
+            cell.setAttribute("data-label", heads[i].textContent.trim());
+          }
+        });
+      });
+    });
+
     /* ---------- الظهور التدريجي عند التمرير ---------- */
     var targets = document.querySelectorAll(
       ".section-head, .card, .quote, .step, .viz, .table-wrap, .cta-band, .assure > div, .hero__stats, details.faq"
@@ -105,6 +119,15 @@
         t.classList.add("reveal");
         io.observe(t);
       });
+
+      /* عنصر داخل <details> مغلق لا يتقاطع أبدًا فيبقى شفافًا بعد فتحه.
+         toggle لا يصعد في الشجرة، فيُلتقط في مرحلة الالتقاط. */
+      document.addEventListener("toggle", function (e) {
+        if (e.target.tagName !== "DETAILS" || !e.target.open) return;
+        Array.prototype.forEach.call(e.target.querySelectorAll(".reveal"), function (n) {
+          n.classList.add("is-in");
+        });
+      }, true);
     }
 
     /* ---------- ظل الرأس بعد مغادرة أعلى الصفحة ---------- */

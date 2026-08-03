@@ -578,6 +578,32 @@ details.faq p { margin: .8rem 0 0; color: var(--ink-2); }
 .assure h3 svg { width: 18px; height: 18px; color: var(--brand); flex: none; }
 .assure p { margin: 0; font-size: .93rem; color: var(--ink-2); }
 
+/* ---------- قسم المقارنة ---------- */
+.compare-grid { display: grid; grid-template-columns: 1.55fr 1fr; gap: 1.5rem; align-items: start; }
+.compare-side {
+  display: grid; gap: .9rem; align-content: start;
+  background: var(--surface-1); border: 1px solid var(--hairline);
+  border-radius: var(--r-md); padding: 1.4rem; box-shadow: var(--shadow-1);
+}
+.compare-stat { display: flex; align-items: baseline; gap: .75rem; }
+.compare-stat__big {
+  font-size: 1.85rem; font-weight: 700; line-height: 1.1; color: var(--brand-strong);
+  flex: none; min-width: 4.6ch;
+}
+.compare-stat__label { font-size: .92rem; color: var(--ink-2); line-height: 1.45; }
+.compare-stat__label small { color: var(--ink-muted); font-size: .84rem; }
+
+.compare-more { margin-top: 1.25rem; }
+.compare-more summary {
+  cursor: pointer; font-weight: 600; color: var(--brand-strong);
+  list-style: none; display: inline-flex; align-items: center; gap: .4rem;
+  padding: .55rem .1rem; min-height: 44px;
+}
+.compare-more summary::-webkit-details-marker { display: none; }
+.compare-more summary::after { content: "▾"; transition: transform .2s var(--ease); }
+.compare-more[open] summary::after { transform: rotate(180deg); }
+.compare-more .table-wrap { margin-top: .5rem; }
+
 /* شريط نداء ثابت أسفل شاشة الجوال — الزر الأهم يبقى في متناول الإبهام */
 .cta-dock {
   position: fixed; inset-inline: 0; bottom: 0; z-index: 90;
@@ -589,7 +615,57 @@ details.faq p { margin: .8rem 0 0; color: var(--ink-2); }
 .cta-dock.is-on { transform: none; }
 .cta-dock .btn { flex: 1; padding: .7rem 1rem; }
 
-/* ---------- 14. الاستجابة ---------- */
+/* ==========================================================================
+   14. وضع الآدمن
+   ========================================================================== */
+#deem-admin {
+  position: fixed; inset-inline: 0; top: 0; z-index: 300;
+  background: #161c26; color: #fff;
+  border-bottom: 2px solid var(--bubble-aqua);
+  padding: .6rem 1rem .5rem; font-size: .9rem;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, .3);
+}
+.adm__row { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+.adm__grow { flex: 1; }
+.adm__brand { color: var(--bubble-aqua); font-weight: 700; }
+.adm__count { color: rgba(255, 255, 255, .65); font-size: .85rem; }
+.adm__hint { margin: .35rem 0 0; font-size: .78rem; color: rgba(255, 255, 255, .55); }
+.adm__hint kbd {
+  background: rgba(255, 255, 255, .12); border-radius: 4px; padding: 0 .35rem; font-size: .95em;
+}
+.adm__btn {
+  font: inherit; font-size: .84rem; font-weight: 600; cursor: pointer;
+  background: rgba(255, 255, 255, .1); color: #fff;
+  border: 1px solid rgba(255, 255, 255, .18); border-radius: 999px;
+  padding: .35rem .85rem; min-height: 34px;
+}
+.adm__btn:hover { background: rgba(255, 255, 255, .2); }
+.adm__btn--solid { background: var(--bubble-blue); color: #101820; border-color: transparent; }
+.adm__btn--warn { color: #ffc9c9; }
+body.has-admin { padding-top: 74px; }
+body.has-admin .site-header { top: 74px; }
+
+.adm-editable { outline: 1px dashed transparent; outline-offset: 3px; border-radius: 3px; cursor: text; }
+.adm-editable:hover { outline-color: var(--bubble-blue); background: color-mix(in srgb, var(--bubble-aqua) 10%, transparent); }
+.adm-editable.is-editing {
+  outline: 2px solid var(--bubble-aqua); outline-offset: 3px;
+  background: color-mix(in srgb, var(--bubble-aqua) 14%, transparent);
+}
+#adm-del {
+  position: absolute; z-index: 290; opacity: 0; pointer-events: none;
+  width: 24px; height: 24px; border-radius: 50%; border: 0; cursor: pointer;
+  background: var(--status-critical); color: #fff; font-size: .8rem; line-height: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .3);
+}
+#adm-del.is-on { opacity: 1; pointer-events: auto; }
+
+@media (max-width: 620px) {
+  body.has-admin { padding-top: 96px; }
+  body.has-admin .site-header { top: 96px; }
+  .adm__hint { font-size: .74rem; }
+}
+
+/* ---------- 15. الاستجابة ---------- */
 @media (max-width: 1000px) {
   .grid--4 { grid-template-columns: repeat(2, 1fr); }
   .steps { grid-template-columns: repeat(2, 1fr); }
@@ -614,16 +690,70 @@ details.faq p { margin: .8rem 0 0; color: var(--ink-2); }
 
 @media (max-width: 860px) {
   .assure { grid-template-columns: 1fr; }
+  .compare-grid { grid-template-columns: 1fr; }
   .cta-dock { display: flex; }
-  .site-footer { padding-bottom: 6rem; }
+  .site-footer { padding-bottom: 6rem; }   /* مساحة لشريط النداء الثابت */
+
+  /* أهداف لمس لا تقل عن 44px */
+  .btn { min-height: 46px; }
+  .btn--sm { min-height: 40px; }
+  .nav__links a, .viz__btn, details.faq summary { min-height: 44px; display: flex; align-items: center; }
+  .viz__btn { justify-content: center; }
+  .theme-toggle, .nav__toggle { width: 44px; height: 44px; }
+}
+
+/* ---- جداول تتحوّل إلى بطاقات بدل التمرير الأفقي ----
+   يُفعَّل بإضافة data-stack، وتُملأ تسميات الخلايا من رؤوس الجدول في site.js */
+@media (max-width: 620px) {
+  .table-wrap[data-stack] {
+    border: 0; background: transparent; overflow: visible; border-radius: 0;
+  }
+  .table-wrap[data-stack] table,
+  .table-wrap[data-stack] tbody,
+  .table-wrap[data-stack] tr,
+  .table-wrap[data-stack] td { display: block; width: 100%; }
+  .table-wrap[data-stack] thead { display: none; }
+  .table-wrap[data-stack] tr {
+    background: var(--surface-1); border: 1px solid var(--hairline);
+    border-radius: var(--r-md); padding: .3rem 1rem; margin-bottom: .75rem;
+    box-shadow: var(--shadow-1);
+  }
+  .table-wrap[data-stack] td {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
+    padding: .6rem 0; border-bottom: 1px solid var(--hairline); white-space: normal;
+  }
+  .table-wrap[data-stack] td:last-child { border-bottom: 0; }
+  .table-wrap[data-stack] td::before {
+    content: attr(data-label); color: var(--ink-muted);
+    font-size: .84rem; font-weight: 600; flex: none; max-width: 45%;
+  }
+  /* الخلية الأولى عنوان البطاقة، فلا تحمل تسمية */
+  .table-wrap[data-stack] td:first-child {
+    font-weight: 600; color: var(--ink-1); font-size: 1.02rem; padding-top: .8rem;
+  }
+  .table-wrap[data-stack] td:first-child::before { display: none; }
 }
 
 @media (max-width: 560px) {
   body { font-size: 16px; }
+  .wrap { width: min(100% - 1.75rem, var(--wrap)); }
   .grid--4, .steps, .footer-grid { grid-template-columns: 1fr; }
   .step { padding-top: 0; padding-inline-start: 3.4rem; min-height: 42px; }
   .cta-band { flex-direction: column; align-items: flex-start; }
-  .viz { padding: 1.1rem 1rem .9rem; }
+  .cta-band .btn { width: 100%; }
+  .viz { padding: 1.1rem .9rem .9rem; }
+  .btn-row { flex-direction: column; align-items: stretch; }
+  .btn-row .btn { width: 100%; }
+  .hero__stats { margin-top: 2rem; padding-top: 1.5rem; }
+  .logo small { display: none; }              /* السطر اللاتيني يزاحم على الشاشات الضيقة */
+  .logo { font-size: 1.1rem; gap: .5rem; }
+  .logo__mark { width: 36px; height: 36px; }
+  .logo__mark svg { width: 30px; height: 19.2px; }
+  .portal-bar h1 { font-size: 1.25rem; }
+  .hero-figure .value { font-size: 3.2rem; }
+  .compare-stat__big { font-size: 1.6rem; }
+  .card { padding: 1.25rem; }
+  .quote { padding: 1.25rem; }
 }
 
 @media print {
