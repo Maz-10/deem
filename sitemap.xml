@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://deemdrone.sa/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://deemdrone.sa/services</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://deemdrone.sa/technology</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://deemdrone.sa/pricing</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://deemdrone.sa/about</loc><changefreq>yearly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://deemdrone.sa/contact</loc><changefreq>yearly</changefreq><priority>0.9</priority></url>
+</urlset>
