@@ -1,9 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="8" fill="#0a2540"/>
-  <g fill="none" stroke="#7fd4e0" stroke-width="2" stroke-linecap="round">
-    <path d="M6 10h5M21 10h5M8.5 10v2.5M23.5 10v2.5"/>
-    <rect x="11.5" y="13.5" width="9" height="6" rx="2" stroke="#fff"/>
-    <path d="M13 22.5c1 1.6 5 1.6 6 0" stroke="#7fd4e0"/>
-    <path d="M16 20v2.5" stroke="#7fd4e0"/>
-  </g>
+  <rect width="32" height="32" rx="7" fill="#161c26"/>
+  <circle cx="7.95" cy="18.45" r="6.45" fill="#6bb0c1" opacity=".88"/>
+  <circle cx="20.25" cy="14.94" r="5.57" fill="#86bda1" opacity=".88"/>
+  <circle cx="16.15" cy="19.92" r="4.98" fill="#8ad9d9" opacity=".78"/>
+  <circle cx="23.77" cy="20.21" r="3.81" fill="#a3e3b6" opacity=".72"/>
+  <circle cx="23.77" cy="8.49" r="1.64" fill="#93cfa8"/>
+  <circle cx="28.75" cy="20.21" r="1.17" fill="#93cfa8"/>
+  <circle cx="9.12" cy="14.35" r="1.17" fill="#cfe4ea" opacity=".85"/>
+  <circle cx="16.74" cy="16.69" r=".88" fill="#dff3f0" opacity=".85"/>
 </svg>
