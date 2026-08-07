@@ -294,33 +294,51 @@ ul, ol { padding-inline-start: 1.3em; }
   position: relative; overflow: hidden; color: #fff;
   min-height: min(760px, calc(100svh - 72px));
   background:
-    linear-gradient(90deg, rgba(5, 22, 27, .86) 0%, rgba(5, 22, 27, .58) 42%, rgba(5, 22, 27, .14) 76%),
+    linear-gradient(90deg, rgba(4, 19, 24, .92) 0%, rgba(4, 19, 24, .78) 34%, rgba(4, 19, 24, .25) 61%, rgba(4, 19, 24, .06) 82%),
     url("../img/hero-drone-cleaning.png") center / cover no-repeat,
     linear-gradient(150deg, var(--brand-ink) 0%, var(--brand-ink-soft) 52%, #35565f 120%);
 }
 .hero::after {
   content: ""; position: absolute; inset: 0;
-  background: linear-gradient(0deg, rgba(5, 22, 27, .42), rgba(5, 22, 27, .02) 38%, rgba(5, 22, 27, .28));
+  background: linear-gradient(0deg, rgba(4, 19, 24, .66), rgba(4, 19, 24, .03) 44%, rgba(4, 19, 24, .18));
   pointer-events: none;
 }
 .hero::before {
   content: ""; position: absolute; inset: 0;
-  background: linear-gradient(90deg, rgba(5, 22, 27, .24), transparent 58%);
+  background: linear-gradient(105deg, rgba(124, 195, 195, .12), transparent 32%);
   pointer-events: none;
 }
 .hero__inner { position: relative; z-index: 1; padding: clamp(5rem, 10vw, 8rem) 0 clamp(3rem, 6vw, 4.5rem); }
-.hero h1 { color: #fff; max-width: 18ch; text-shadow: 0 3px 24px rgba(0, 0, 0, .34); }
-.hero .lede { color: rgba(255, 255, 255, .9); font-size: 1.2rem; max-width: 42rem; text-shadow: 0 2px 18px rgba(0, 0, 0, .34); }
-.hero .eyebrow { background: rgba(255, 255, 255, .14); color: var(--bubble-aqua); }
+.hero .eyebrow,
+.hero h1,
+.hero .lede,
+.hero .btn-row { max-width: 38rem; margin-inline-start: auto; }
+.hero h1 {
+  color: #fff; max-width: 13ch; margin-top: .1rem;
+  font-size: clamp(2.8rem, 4.5vw, 4.45rem); line-height: 1.08;
+  text-shadow: 0 4px 26px rgba(0, 0, 0, .4);
+}
+.hero .lede {
+  color: rgba(255, 255, 255, .92); font-size: clamp(1.12rem, 1.6vw, 1.3rem);
+  max-width: 38rem; text-shadow: 0 2px 18px rgba(0, 0, 0, .4);
+}
+.hero .eyebrow {
+  background: rgba(6, 29, 35, .48); border: 1px solid rgba(185, 239, 235, .28);
+  color: #d5f4ef; box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
+}
+.hero .btn-row { margin-top: 1.75rem !important; }
+.hero .btn--primary { background: #73aeba; box-shadow: 0 12px 30px rgba(0, 0, 0, .2); }
+.hero .btn--primary:hover { background: #91c8cb; }
+.hero .btn--light { background: rgba(255, 255, 255, .94); box-shadow: 0 12px 30px rgba(0, 0, 0, .16); }
 .hero--compact .hero__inner { padding: clamp(2.5rem, 5vw, 4rem) 0; }
 .hero--compact h1 { max-width: 24ch; }
 
 .hero__stats {
   display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
-  margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, .18);
+  margin-top: 3.5rem; padding-top: 1.7rem; border-top: 1px solid rgba(255, 255, 255, .24);
 }
-.hero__stats div strong { display: block; font-size: clamp(1.5rem, 3.2vw, 2.1rem); font-weight: 800; line-height: 1.2; }
-.hero__stats div span { font-size: .9rem; color: rgba(255, 255, 255, .7); }
+.hero__stats div strong { display: block; font-size: clamp(1.5rem, 3.2vw, 2.1rem); font-weight: 800; line-height: 1.2; text-shadow: 0 2px 15px rgba(0, 0, 0, .25); }
+.hero__stats div span { font-size: .9rem; color: rgba(255, 255, 255, .78); }
 
 /* ---------- 7. جداول ---------- */
 .table-wrap { overflow-x: auto; border: 1px solid var(--hairline); border-radius: var(--r-md); background: var(--surface-1); }
@@ -743,11 +761,16 @@ body.has-admin .site-header { top: 74px; }
   .hero {
     min-height: 680px;
     background:
-      linear-gradient(180deg, rgba(5, 22, 27, .9) 0%, rgba(5, 22, 27, .68) 44%, rgba(5, 22, 27, .22) 100%),
+      linear-gradient(180deg, rgba(4, 19, 24, .94) 0%, rgba(4, 19, 24, .74) 45%, rgba(4, 19, 24, .28) 100%),
       url("../img/hero-drone-cleaning.png") 64% center / cover no-repeat,
       linear-gradient(150deg, var(--brand-ink) 0%, var(--brand-ink-soft) 52%, #35565f 120%);
   }
   .hero__inner { padding-top: 4.25rem; }
+  .hero .eyebrow,
+  .hero h1,
+  .hero .lede,
+  .hero .btn-row { max-width: none; margin-inline-start: 0; }
+  .hero h1 { font-size: clamp(2.65rem, 12vw, 3.4rem); }
   .step { padding-top: 0; padding-inline-start: 3.4rem; min-height: 42px; }
   .cta-band { flex-direction: column; align-items: flex-start; }
   .cta-band .btn { width: 100%; }
