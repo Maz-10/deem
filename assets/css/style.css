@@ -292,23 +292,25 @@ ul, ol { padding-inline-start: 1.3em; }
 /* ---------- 6. Hero ---------- */
 .hero {
   position: relative; overflow: hidden; color: #fff;
-  background: linear-gradient(150deg, var(--brand-ink) 0%, var(--brand-ink-soft) 52%, #35565f 120%);
+  min-height: min(760px, calc(100svh - 72px));
+  background:
+    linear-gradient(90deg, rgba(5, 22, 27, .86) 0%, rgba(5, 22, 27, .58) 42%, rgba(5, 22, 27, .14) 76%),
+    url("../img/hero-drone-cleaning.png") center / cover no-repeat,
+    linear-gradient(150deg, var(--brand-ink) 0%, var(--brand-ink-soft) 52%, #35565f 120%);
 }
 .hero::after {
-  content: ""; position: absolute; inset-inline-end: -12%; top: -30%;
-  width: 60vw; height: 60vw; border-radius: 50%;
-  background: radial-gradient(circle, color-mix(in srgb, var(--brand-glow) 26%, transparent), transparent 62%);
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(0deg, rgba(5, 22, 27, .42), rgba(5, 22, 27, .02) 38%, rgba(5, 22, 27, .28));
   pointer-events: none;
 }
 .hero::before {
-  content: ""; position: absolute; inset-inline-end: 22%; bottom: -18%;
-  width: 34vw; height: 34vw; border-radius: 50%;
-  background: radial-gradient(circle, color-mix(in srgb, var(--bubble-sage) 18%, transparent), transparent 64%);
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, rgba(5, 22, 27, .24), transparent 58%);
   pointer-events: none;
 }
-.hero__inner { position: relative; z-index: 1; padding: clamp(3.5rem, 8vw, 6.5rem) 0 clamp(3rem, 6vw, 4.5rem); }
-.hero h1 { color: #fff; max-width: 20ch; }
-.hero .lede { color: rgba(255, 255, 255, .84); font-size: 1.2rem; }
+.hero__inner { position: relative; z-index: 1; padding: clamp(5rem, 10vw, 8rem) 0 clamp(3rem, 6vw, 4.5rem); }
+.hero h1 { color: #fff; max-width: 18ch; text-shadow: 0 3px 24px rgba(0, 0, 0, .34); }
+.hero .lede { color: rgba(255, 255, 255, .9); font-size: 1.2rem; max-width: 42rem; text-shadow: 0 2px 18px rgba(0, 0, 0, .34); }
 .hero .eyebrow { background: rgba(255, 255, 255, .14); color: var(--bubble-aqua); }
 .hero--compact .hero__inner { padding: clamp(2.5rem, 5vw, 4rem) 0; }
 .hero--compact h1 { max-width: 24ch; }
@@ -738,6 +740,14 @@ body.has-admin .site-header { top: 74px; }
   body { font-size: 16px; }
   .wrap { width: min(100% - 1.75rem, var(--wrap)); }
   .grid--4, .steps, .footer-grid { grid-template-columns: 1fr; }
+  .hero {
+    min-height: 680px;
+    background:
+      linear-gradient(180deg, rgba(5, 22, 27, .9) 0%, rgba(5, 22, 27, .68) 44%, rgba(5, 22, 27, .22) 100%),
+      url("../img/hero-drone-cleaning.png") 64% center / cover no-repeat,
+      linear-gradient(150deg, var(--brand-ink) 0%, var(--brand-ink-soft) 52%, #35565f 120%);
+  }
+  .hero__inner { padding-top: 4.25rem; }
   .step { padding-top: 0; padding-inline-start: 3.4rem; min-height: 42px; }
   .cta-band { flex-direction: column; align-items: flex-start; }
   .cta-band .btn { width: 100%; }
