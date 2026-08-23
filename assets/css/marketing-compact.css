@@ -1,0 +1,315 @@
+/* ديم درون — طبقة الموقع التعريفي المختصر */
+
+.marketing-page {
+  background: var(--page);
+}
+
+.marketing-page .site-header {
+  background: color-mix(in srgb, var(--page) 94%, transparent);
+}
+
+.marketing-page .nav__links {
+  gap: .35rem;
+}
+
+.marketing-page .nav__links a {
+  padding-inline: .7rem;
+}
+
+.marketing-page .hero {
+  min-height: 590px;
+  display: flex;
+  align-items: center;
+  background-position: 60% center;
+}
+
+.marketing-page .hero__inner {
+  width: 100%;
+  padding: clamp(4rem, 8vw, 6.5rem) 0 clamp(3rem, 6vw, 4.5rem);
+}
+
+.marketing-page .hero h1 {
+  max-width: 10.5ch;
+  font-size: clamp(2.7rem, 5.2vw, 4.7rem);
+}
+
+.marketing-page .hero .lede {
+  max-width: 36rem;
+}
+
+.hero-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .65rem 1.15rem;
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255,255,255,.24);
+  max-width: 44rem;
+  margin-inline-start: auto;
+  color: rgba(255,255,255,.86);
+  font-size: .94rem;
+}
+
+.hero-trust span::before {
+  content: "✓";
+  margin-inline-end: .35rem;
+  color: #bde5d0;
+  font-weight: 800;
+}
+
+.compact-section {
+  padding: clamp(3.25rem, 6vw, 4.6rem) 0;
+}
+
+.compact-section + .compact-section {
+  border-top: 1px solid var(--hairline);
+}
+
+.compact-lead {
+  max-width: 60ch;
+}
+
+.value-grid,
+.service-grid,
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.mini-card {
+  padding: 1.4rem;
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-md);
+  background: var(--surface-1);
+}
+
+.mini-card h3 {
+  margin-bottom: .45rem;
+}
+
+.mini-card p {
+  margin: 0;
+  color: var(--ink-2);
+}
+
+.process-card {
+  position: relative;
+  padding-top: 3.8rem;
+}
+
+.process-card::before {
+  content: attr(data-step);
+  position: absolute;
+  top: 1.2rem;
+  inset-inline-start: 1.4rem;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--brand-wash);
+  color: var(--brand-strong);
+  font-weight: 800;
+}
+
+.split-clean {
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: center;
+}
+
+.safety-panel {
+  background: var(--brand-ink);
+  color: #fff;
+  border-radius: var(--r-lg);
+  padding: clamp(1.6rem, 4vw, 2.4rem);
+  box-shadow: var(--shadow-2);
+}
+
+.safety-panel h2,
+.safety-panel h3 {
+  color: #fff;
+}
+
+.safety-panel p,
+.safety-panel li {
+  color: rgba(255,255,255,.8);
+}
+
+.safety-panel ul {
+  margin-bottom: 0;
+}
+
+.report-mock {
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-lg);
+  background: var(--surface-1);
+  box-shadow: var(--shadow-2);
+  padding: 1.4rem;
+}
+
+.report-mock__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.report-mock__badge {
+  font-size: .78rem;
+  padding: .28rem .65rem;
+  border-radius: 999px;
+  background: var(--brand-wash);
+  color: var(--brand-strong);
+  white-space: nowrap;
+}
+
+.report-mock__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .75rem;
+  margin-top: 1rem;
+}
+
+.report-mock__stat {
+  background: var(--surface-2);
+  border-radius: var(--r-sm);
+  padding: 1rem;
+}
+
+.report-mock__stat small {
+  display: block;
+  color: var(--ink-muted);
+  margin-bottom: .3rem;
+}
+
+.report-mock__stat strong {
+  display: block;
+  font-size: 1.12rem;
+}
+
+.about-strip {
+  display: grid;
+  grid-template-columns: .9fr 1.1fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.name-meaning {
+  border-inline-start: 3px solid var(--brand);
+  padding-inline-start: 1.2rem;
+}
+
+.faq-compact {
+  max-width: 820px;
+}
+
+.contact-panel {
+  display: grid;
+  grid-template-columns: .8fr 1.2fr;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+  background: var(--brand-ink);
+  color: #fff;
+  border-radius: var(--r-lg);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.contact-panel h2,
+.contact-panel h3 {
+  color: #fff;
+}
+
+.contact-panel p {
+  color: rgba(255,255,255,.8);
+}
+
+.contact-panel .form {
+  background: #fff;
+  color: #161c26;
+  padding: 1.25rem;
+  border-radius: var(--r-md);
+}
+
+.contact-panel .form-note {
+  color: #64615a;
+}
+
+.contact-panel .field label {
+  color: #161c26;
+}
+
+.contact-panel .field input,
+.contact-panel .field select,
+.contact-panel .field textarea {
+  background: #fff;
+  color: #161c26;
+}
+
+.contact-status {
+  display: none;
+  margin-top: .9rem;
+  padding: .8rem 1rem;
+  border-radius: var(--r-sm);
+  background: #eff7f2;
+  color: #154b2b;
+}
+
+.contact-status.is-visible {
+  display: block;
+}
+
+.marketing-page .site-footer {
+  margin-top: 0;
+}
+
+.marketing-page .footer-grid {
+  grid-template-columns: 1.4fr .8fr .8fr;
+}
+
+@media (max-width: 900px) {
+  .value-grid,
+  .service-grid,
+  .process-grid,
+  .split-clean,
+  .about-strip,
+  .contact-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .marketing-page .hero {
+    min-height: 540px;
+  }
+
+  .report-mock__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .marketing-page .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .marketing-page .hero {
+    min-height: 520px;
+    background-position: 67% center;
+  }
+
+  .marketing-page .hero h1 {
+    max-width: 12ch;
+  }
+
+  .hero-trust {
+    display: grid;
+    gap: .35rem;
+  }
+
+  .compact-section {
+    padding: 3rem 0;
+  }
+}

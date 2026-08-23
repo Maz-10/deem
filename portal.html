@@ -3,17 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>بوابة العميل | ديم درون</title>
-<meta name="description" content="لوحة نظافة الواجهة: مؤشر رقمي لكل جهة من مبناك، تطوّره عبر الزمن، مصادر الاتساخ، وسجل الزيارات.">
+<title>نموذج تقرير العميل | ديم درون</title>
+<meta name="description" content="نموذج توضيحي لتقرير الزيارة ولوحة متابعة الواجهة لدى ديم درون. جميع البيانات المعروضة تجريبية.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="assets/fonts/thmanyah-sans-regular.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/thmanyah-serif-display-medium.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/marketing-compact.css">
 </head>
 <body>
 <a class="skip-link" href="#main">تخطَّ إلى المحتوى</a>
-
 <header class="site-header">
   <div class="wrap nav">
     <a class="logo" href="index.html">
@@ -23,71 +22,39 @@
           <circle cx="20.25" cy="14.94" r="5.57" fill="#86bda1" opacity=".88"/>
           <circle cx="16.15" cy="19.92" r="4.98" fill="#8ad9d9" opacity=".78"/>
           <circle cx="23.77" cy="20.21" r="3.81" fill="#a3e3b6" opacity=".72"/>
-          <circle cx="23.77" cy="8.49" r="1.64" fill="#93cfa8"/>
-          <circle cx="28.75" cy="20.21" r="1.17" fill="#93cfa8"/>
-          <circle cx="9.12" cy="14.35" r="1.17" fill="#cfe4ea" opacity=".85"/>
-          <circle cx="16.74" cy="16.69" r=".88" fill="#dff3f0" opacity=".85"/>
         </svg>
       </span>
       <span>ديم درون<small>DEEM DRONE</small></span>
     </a>
-    <nav class="nav__links" aria-label="التنقل الرئيسي">
-      <a href="index.html">الرئيسية</a>
-      <a href="services.html">الخدمات</a>
-      <a href="technology.html">التقنية والسلامة</a>
-      <a href="pricing.html">الأسعار</a>
-      <a href="about.html">من نحن</a>
-      <a href="portal.html">بوابة العميل</a>
-    </nav>
-    <div class="nav__actions">
-      <button class="theme-toggle" type="button" aria-label="تبديل الوضع الليلي">☾</button>
-      <button class="nav__toggle" type="button" aria-expanded="false" aria-label="فتح القائمة">☰</button>
-      <a class="btn btn--primary btn--sm" href="contact.html">طلب زيارة</a>
+    <div class="nav__actions" style="margin-inline-start:auto">
+      <a class="btn btn--ghost btn--sm" href="index.html">العودة للموقع</a>
+      <a class="btn btn--primary btn--sm" href="index.html#contact">اطلب معاينة</a>
     </div>
   </div>
 </header>
 
 <main id="main">
-
-  <!-- ============ شاشة الدخول ============ -->
-  <section id="portal-login" class="wrap">
-    <div class="card login-card">
-      <h1 style="font-size:1.5rem">بوابة العميل</h1>
-      <p style="color:var(--ink-2)">ادخل لعرض لوحة نظافة واجهتك: المؤشر الحالي، تطوّره عبر 12 شهرًا، وحالة كل جهة من مبناك.</p>
-      <form id="login-form" class="form" data-validate>
-        <div class="field">
-          <label for="l-id">رقم العقد أو البريد الإلكتروني</label>
-          <input id="l-id" type="text" required autocomplete="username" placeholder="NKH-2201">
-          <p class="error">أدخل رقم العقد أو بريدك الإلكتروني.</p>
-        </div>
-        <div class="field">
-          <label for="l-pass">رمز الدخول</label>
-          <input id="l-pass" type="password" required autocomplete="current-password" placeholder="••••••••">
-          <p class="error">أدخل رمز الدخول.</p>
-        </div>
-        <button class="btn btn--primary" type="submit">دخول</button>
-      </form>
-      <p class="demo-note" style="margin-top:1.2rem">
-        <strong>نسخة تجريبية:</strong> أي بيانات تفتح اللوحة، أو
-        <a href="#" data-demo-enter>ادخل مباشرةً كـ «برج النخيل التجاري» ←</a>
-      </p>
+  <section class="section--tight" style="background:var(--brand-wash);border-bottom:1px solid var(--hairline)">
+    <div class="wrap">
+      <strong>نموذج توضيحي فقط.</strong>
+      <span style="color:var(--ink-2)"> البيانات أدناه تجريبية لشرح شكل التقرير الذي يمكن تسليمه للعميل، ولا تمثل مبنى أو عقدًا حقيقيًا.</span>
     </div>
   </section>
 
-  <!-- ============ اللوحة ============ -->
-  <section id="portal-dashboard" class="wrap portal-shell is-hidden" tabindex="-1">
+  <section id="portal-login" class="is-hidden" aria-hidden="true"></section>
 
+  <section id="portal-dashboard" class="wrap portal-shell" tabindex="-1">
     <div class="portal-bar">
       <div>
+        <p class="eyebrow" style="margin-bottom:.45rem">نموذج تقرير عميل</p>
         <h1 data-building>—</h1>
         <p class="meta" data-meta>—</p>
       </div>
       <div class="spacer"></div>
       <span class="meta" data-survey>—</span>
-      <a class="btn btn--primary btn--sm" href="contact.html">اطلب زيارة مبكرة</a>
+      <a class="btn btn--primary btn--sm" href="index.html#contact">اطلب معاينة</a>
     </div>
 
-    <!-- الصف الأول: الرقم البطولي + البطاقات -->
     <div class="grid grid--split" style="margin-bottom:1.25rem">
       <div class="hero-figure">
         <p class="label">مؤشر نظافة المبنى الكلي</p>
@@ -97,10 +64,7 @@
         </div>
         <p class="delta" data-index-delta>—</p>
         <p style="margin:.6rem 0 0"><span class="status-pill" data-index-state></span></p>
-        <p style="margin:.9rem 0 0;font-size:.85rem;color:var(--ink-muted)">
-          مرجّح بمساحة كل جهة. المنهجية منشورة في
-          <a href="technology.html#index">صفحة التقنية</a>.
-        </p>
+        <p style="margin:.9rem 0 0;font-size:.85rem;color:var(--ink-muted)">المؤشر المعروض جزء من النموذج التجريبي، وتُعتمد منهجيته تعاقديًا قبل استخدامها مع عميل فعلي.</p>
       </div>
       <div class="grid grid--2">
         <div class="stat"><p class="label">آخر زيارة تنظيف</p><div class="value" data-last-visit>—</div><div class="sub" data-last-visit-sub>—</div></div>
@@ -110,16 +74,13 @@
       </div>
     </div>
 
-    <!-- الرسم الرئيسي: المؤشر عبر الزمن -->
     <div id="chart-trend" style="margin-bottom:1.25rem"></div>
 
-    <!-- الجهات + مصادر الاتساخ -->
     <div class="grid grid--2" style="margin-bottom:1.25rem">
       <div id="chart-facades"></div>
       <div id="chart-soiling"></div>
     </div>
 
-    <!-- العقد + التوصيات -->
     <div class="grid grid--2" style="margin-bottom:1.25rem">
       <div class="card">
         <h3>استهلاك عقد الزيارات</h3>
@@ -128,20 +89,17 @@
           <div class="meter__track"><div class="meter__fill" data-meter-fill style="width:0%"></div></div>
           <div class="meter__legend"><span data-meter-used>—</span><span data-meter-left>—</span></div>
         </div>
-        <p style="margin:1.1rem 0 0;font-size:.9rem;color:var(--ink-2)">
-          الزيارات التصحيحية الناتجة عن هبوط المؤشر تحت الحد المتعاقد عليه <strong>لا تُحتسب</strong> من رصيد العقد.
-        </p>
+        <p style="margin:1.1rem 0 0;font-size:.9rem;color:var(--ink-2)">هذه الشروط جزء من بيانات النموذج، وليست وعدًا تعاقديًا منشورًا.</p>
       </div>
       <div class="card">
-        <h3>ما الذي يستدعي انتباهك</h3>
+        <h3>ما الذي يستدعي الانتباه</h3>
         <div class="advice" data-advice></div>
       </div>
     </div>
 
-    <!-- سجل الزيارات -->
     <div class="card" style="padding-bottom:.6rem">
       <h3>سجل الزيارات</h3>
-      <p style="color:var(--ink-2);font-size:.92rem">كل زيارة موثّقة بمسح مصوّر قبل وبعد، متاح للتحميل من فريق الحساب.</p>
+      <p style="color:var(--ink-2);font-size:.92rem">مثال على طريقة توثيق الزيارات ونطاق التنفيذ.</p>
       <div class="table-wrap" data-stack>
         <table>
           <thead>
@@ -152,25 +110,21 @@
       </div>
     </div>
 
-    <p class="form-note" style="margin:1.2rem 0 2rem">
-      البيانات المعروضة تجريبية لغرض العرض. في النسخة الإنتاجية تُحمَّل من
-      <code>GET /api/clients/:id/cleanliness</code> بنفس الشكل، فلا تتغيّر واجهة العرض.
-    </p>
+    <p class="form-note" style="margin:1.2rem 0 2rem">جميع الأسماء والأرقام في هذه الصفحة تجريبية. عند تفعيل بوابة عميل حقيقية تُربط بالمصادقة والبيانات الفعلية بدل ملف العرض.</p>
   </section>
-
 </main>
 
 <footer class="site-footer">
   <div class="wrap">
     <div class="footer-bottom" style="margin-top:0;padding-top:0;border:0">
-      <span>© <span data-year>2026</span> ديم درون. جميع الحقوق محفوظة.</span>
-      <span><a href="index.html">العودة للموقع</a></span>
+      <span>© <span data-year>2026</span> ديم درون.</span>
+      <span><a href="index.html">العودة للموقع التعريفي</a></span>
     </div>
   </div>
 </footer>
 
+<script>if (!location.hash) location.hash = "dashboard";</script>
 <script src="assets/js/site.js" defer></script>
-<script src="assets/js/admin.js" defer></script>
 <script src="assets/js/charts.js" defer></script>
 <script src="assets/data/client-alnakheel.js" defer></script>
 <script src="assets/js/portal.js" defer></script>
