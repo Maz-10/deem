@@ -11,6 +11,8 @@
 - `assets/css/marketing-compact.css` — طبقة اختصار الموقع العام وضبط المسافات والتخطيط.
 - `assets/js/site.js` — التنقل وسلوكيات الواجهة العامة.
 - `assets/js/charts.js`, `assets/js/portal.js`, `assets/data/client-alnakheel.js` — نموذج تقرير العميل التجريبي.
+- `assets/brand/` — ملفات الشعار (SVG وPNG) والأيقونات، مولَّدة من `tools/build_brand.py`.
+- `docs/BRAND.md` — فكرة الشعار وبناؤه وألوانه وملفاته وقواعد استخدامه.
 - `docs/CONTENT.md` — مصدر الحقيقة للنصوص العامة الحالية.
 - `docs/CLEANLINESS-INDEX.md` — مرجع فني لمنهجية مؤشر النظافة؛ ليس محتوى تسويقيًا عامًا.
 - `docs/PLAN.md` — وثيقة تاريخية للخطة الموسعة الأولى، ولا تُعد مرجعًا لبنية الموقع المنشور الحالية.

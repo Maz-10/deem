@@ -47,20 +47,25 @@
   --grid: #e1e0d9;
   --axis: #c3c2b7;
 
-  /* ---- الهوية: مأخوذة من فقاعات الشعار مباشرةً ----
-     أرضية الشعار #161c26، والفقاعات أزرق فولاذي #5e9aaa وتركوازي #7cc3c3
-     وأخضر مريمي #79a98a. ألوان الفقاعات نفسها فاتحة (3.1:1 مع الأبيض) فلا
-     تصلح أسطحًا لنص أبيض، فاشتُقّت منها درجات أغمق للعناصر التفاعلية
-     وبقيت الألوان الأصلية للّمسات والأسطح الداكنة. */
-  --brand-ink: #161c26;          /* أرضية الشعار — الرأس والهيرو والتذييل */
+  /* ---- الهوية ----
+     الكحلي #161c26 لون حروف الشعار وأرضية الأشرطة الداكنة. درجات الأزرق
+     الفولاذي للواجهة مشتقة من الهوية السابقة (علامة الفقاعات)، وتشارك «أزرق
+     الماء» في الشعار درجةَ اللون نفسها تقريبًا، فتبقى الواجهة هادئة ويبقى
+     الشعار أصفى نقطة في الصفحة. الدرجات الفاتحة (3.1:1 مع الأبيض) لا تصلح
+     أسطحًا لنص أبيض، فالأزرار والروابط بدرجات أغمق. */
+  --brand-ink: #161c26;          /* حروف الشعار — الرأس والهيرو والتذييل */
   --brand-ink-soft: #24313f;
-  --brand: #467480;              /* أزرق الشعار مُعتَّمًا — أزرار (5.2:1 مع الأبيض) */
+  --brand: #467480;              /* أزرق فولاذي — أزرار (5.2:1 مع الأبيض) */
   --brand-strong: #3a5f69;       /* روابط ونصوص (6.8:1 على السطح الفاتح) */
   --brand-wash: #ecf3f5;         /* خلفيات هادئة */
   --brand-glow: #7cc3c3;
   --on-brand: #ffffff;           /* لون النص فوق --brand */
 
-  /* ألوان الفقاعات كما هي — للّمسات والزخارف لا للنصوص */
+  /* نقطتا الشعار — القطرة واللمعة (assets/brand) */
+  --logo-water: #1497c4;
+  --logo-glint: #1497c4;
+
+  /* ألوان الفقاعات من الهوية السابقة — للّمسات (وضع التحرير) لا للنصوص */
   --bubble-blue: #5e9aaa;
   --bubble-aqua: #7cc3c3;
   --bubble-sage: #79a98a;
@@ -118,6 +123,8 @@
     --brand-wash: #1b2830;
     --brand-glow: #4d8593;
     --on-brand: #101820;
+    --logo-water: #3fc0e6;
+    --logo-glint: #c9f1fa;
 
     --series-1: #3987e5;
     --series-2: #d95926;
@@ -149,6 +156,8 @@
   --brand-wash: #1b2830;
   --brand-glow: #4d8593;
   --on-brand: #101820;
+  --logo-water: #3fc0e6;
+  --logo-glint: #c9f1fa;
 
   --series-1: #3987e5;
   --series-2: #d95926;
@@ -224,14 +233,17 @@ ul, ol { padding-inline-start: 1.3em; }
 }
 .nav { display: flex; align-items: center; gap: 1rem; padding: .75rem 0; }
 
-.logo { display: flex; align-items: center; gap: .6rem; font-weight: 800; font-size: 1.22rem; color: var(--ink-1); text-decoration: none; }
-.logo__mark {
-  width: 40px; height: 40px; border-radius: 12px; flex: none;
-  background: #161c26;          /* أرضية الشعار الأصلية — الفقاعات مصمَّمة عليها */
-  display: grid; place-items: center;
+/* الشعار: «ديم» بحروف بلون النص، ونقطتا الياء قطرة ولمعة.
+   المصدر الهندسي tools/build_brand.py — والنسخة المضمّنة تُطبع منه بـ --inline. */
+.logo { display: flex; align-items: center; gap: .85rem; color: var(--ink-1); text-decoration: none; }
+.logo__word { display: block; flex: none; width: 71.63px; height: 40px; }
+.logo__drop { fill: var(--logo-water); }
+.logo__glint { fill: var(--logo-glint); }
+.logo__latin {
+  display: block; flex: none; width: 80.84px; height: 9px; box-sizing: content-box;
+  padding-block: 6px; padding-inline-start: .85rem;
+  border-inline-start: 1px solid var(--hairline); color: var(--ink-2);
 }
-.logo__mark svg { width: 34px; height: 21.8px; }
-.logo small { display: block; font-size: .68rem; font-weight: 500; color: var(--ink-muted); letter-spacing: .12em; line-height: 1; }
 
 .nav__links { display: flex; gap: .25rem; margin-inline-start: auto; align-items: center; }
 .nav__links a {
@@ -428,7 +440,8 @@ details.faq p { margin: .8rem 0 0; color: var(--ink-2); }
   margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, .14);
   display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; font-size: .87rem;
 }
-.site-footer .logo { color: #fff; }
+.site-footer .logo { color: #fff; --logo-water: #3fc0e6; --logo-glint: #c9f1fa; }
+.site-footer .logo__latin { color: rgba(255, 255, 255, .72); border-color: rgba(255, 255, 255, .18); }
 
 /* ==========================================================================
    11. طبقة الرسوم البيانية
@@ -778,10 +791,8 @@ body.has-admin .site-header { top: 74px; }
   .btn-row { flex-direction: column; align-items: stretch; }
   .btn-row .btn { width: 100%; }
   .hero__stats { margin-top: 2rem; padding-top: 1.5rem; }
-  .logo small { display: none; }              /* السطر اللاتيني يزاحم على الشاشات الضيقة */
-  .logo { font-size: 1.1rem; gap: .5rem; }
-  .logo__mark { width: 36px; height: 36px; }
-  .logo__mark svg { width: 30px; height: 19.2px; }
+  .logo__latin { display: none; }             /* السطر اللاتيني يزاحم على الشاشات الضيقة */
+  .logo__word { width: 62.68px; height: 35px; }
   .portal-bar h1 { font-size: 1.25rem; }
   .hero-figure .value { font-size: 3.2rem; }
   .compare-stat__big { font-size: 1.6rem; }
