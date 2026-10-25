@@ -1,266 +1,272 @@
 #!/usr/bin/env python3
-"""مولّد ملفات شعار «ديم» — مصدر الحقيقة لهندسة الشعار.
+"""مولّد ملفات شعار «ديم» — مصدر الحقيقة للشعار.
 
-الكلمة «ديم» مرسومة بخط هندسي أحادي السُّمك على شبكة واحدة، ونقطتا الياء
-مستبدلتان بقطرة ماء (يمين) ولمعة نظافة (يسار): يُقرأ الشعار من اليمين
-«ماء ثم بريق» — وهو معنى «ديم.. لبريق دائم».
+الشعار كلمة «ديـم» بخط ثمانية (Thmanyah Sans) بكشيدة واحدة، وفراغ الميم
+الداخلي — وهو بطبيعته على هيئة قطرة — مملوء بقطرة ماء تفصلها عن الحرف شعرة
+بيضاء. كل العناصر من عائلة خط واحدة: الحروف العربية، والاسم اللاتيني، وخط
+الموقع نفسه. ترخيص خطوط ثمانية يجيز استخدامها في الشعارات صراحةً، والملفات
+الناتجة رسوم (مسارات) لا ملفات خط.
 
-كل الملفات تُشتق من الثوابت أدناه، فأي تعديل هنا يُطبَّق على جميع النسخ:
-
-    python3 tools/build_brand.py          # يكتب SVG إلى assets/brand و assets/img/favicon.svg
-    python3 tools/build_brand.py --inline # يطبع نسخة الرأس المضمّنة في index.html و portal.html
-    node tools/render_brand_png.js        # (اختياري) يصدّر نسخ PNG عبر Playwright
+    pip install fonttools brotli uharfbuzz shapely numpy
+    python3 tools/build_brand.py            # يكتب SVG إلى assets/brand و assets/img/favicon.svg
+    python3 tools/build_brand.py --inline   # يطبع نسخة الرأس المضمّنة في index.html و portal.html
+    node tools/render_brand_png.js          # (اختياري) يصدّر نسخ PNG عبر Playwright
 """
-import math
+import io
+import re
+import sys
 from pathlib import Path
+
+import numpy as np
+import uharfbuzz as hb
+from fontTools.pens.boundsPen import BoundsPen
+from fontTools.pens.recordingPen import RecordingPen
+from fontTools.pens.svgPathPen import SVGPathPen
+from fontTools.pens.transformPen import TransformPen
+from fontTools.ttLib import TTFont
+from shapely.geometry import Polygon
 
 ROOT = Path(__file__).resolve().parent.parent
 BRAND = ROOT / "assets" / "brand"
+FONTS = ROOT / "assets" / "fonts"
 
 # ---- الألوان ----------------------------------------------------------------
-INK = "#161c26"        # كحلي الهوية — الحروف على الأرضيات الفاتحة
-WATER = "#1497c4"      # أزرق الماء — القطرة واللمعة على الفاتح (3.4:1 مع الأبيض)
-WATER_LT = "#3fc0e6"   # القطرة على الأرضيات الداكنة (8:1 مع الكحلي)
-GLINT = "#c9f1fa"      # اللمعة على الأرضيات الداكنة
+INK = "#161c26"        # كحلي الهوية: الحروف والأرضية الداكنة
+WATER = "#1593d6"      # ماء ديم: القطرة على الأرضيات الفاتحة
+WATER_LT = "#4cc0ee"   # القطرة على الأرضيات الداكنة
 WHITE = "#ffffff"
 
-# ---- الهندسة (وحدات SVG؛ خط الأساس y=0 ومحور y نازل) -----------------------
-S = 10           # سُمك الخط
-RD = 20          # نصف قطر وعاء الدال
-RM = 17          # نصف قطر عقدة الميم
-T = 26           # ارتفاع سنّ الياء
-TAIL = 26        # نهاية ذيل الميم تحت السطر
-TAIL_ANG = 160   # موضع خروج الذيل من العقدة (180 = أقصى اليسار)
-G1 = 32          # الوصلة بين عقدة الميم والسنّ
-GAP = 17         # الفراغ بين السنّ وذيل الدال
-LD = 24          # امتداد ذيل الدال يسار مركز وعائه
-DAL_TOP = 6      # الذراع العلوية القصيرة للدال
-DROP_R = 7.5     # نصف قطر جسم القطرة
-DROP_K = 2.2     # بُعد رأس القطرة عن مركزها ÷ نصف القطر
-SP_R = 10.5      # نصف قطر اللمعة
-SP_PINCH = 0.16  # نحافة أشعة اللمعة (أصغر = أنحف)
-
-XM = 0.0                  # مركز عقدة الميم
-XT = XM + RM + G1         # سنّ الياء
-XD = XT + GAP + LD        # مركز وعاء الدال
-DOT_Y = S / 2 + 1.6 * S   # خط مركز النقطتين تحت السطر
-DOT_DX = 1.05 * S         # نصف المسافة بين النقطتين
-DOTS_CX = XT - 0.35 * S   # مركز الزوج تحت السنّ
-
-# الصندوق الخارجي للكلمة
-WX0 = XM - RM - S / 2
-WX1 = XD + RD + S / 2
-WY0 = -2 * RD - S / 2
-WY1 = max(TAIL + S / 2, DOT_Y + DROP_R * 1.35, DOT_Y + SP_R)
+# ---- الثوابت -----------------------------------------------------------------
+WORD = "ديـم"          # بكشيدة واحدة بين الياء والميم
+WORD_FONT = "thmanyah-sans-regular.woff2"
+ICON_FONT = "thmanyah-sans-medium.woff2"   # وزن أمتن للأحجام الصغيرة
+LATIN = "DEEM DRONE"
+LATIN_FONT = "thmanyah-sans-regular.woff2"
+LATIN_TRACK = 0.36     # تباعد الحروف اللاتينية (نسبة من وحدة الخط)
+DROP_GAP = 16          # الشعرة بين القطرة والحرف (بوحدات الخط، 1000 للـ em)
 
 
 def f(v):
-    s = f"{v:.2f}".rstrip("0").rstrip(".")
+    s = f"{v:.1f}".rstrip("0").rstrip(".")
     return "0" if s in ("-0", "") else s
 
 
-def drop_d(cx, cy, r, k=DROP_K):
-    """قطرة: دائرة ورأس حاد على بُعد k*r فوق مركزها، بمماسّين نظيفين."""
-    a = math.pi / 2 - math.asin(1 / k)
-    x1, y1 = cx + r * math.cos(-math.pi / 2 + a), cy + r * math.sin(-math.pi / 2 + a)
-    x2, y2 = cx + r * math.cos(-math.pi / 2 - a), cy + r * math.sin(-math.pi / 2 - a)
-    return f"M{f(cx)} {f(cy - k * r)}L{f(x1)} {f(y1)}A{f(r)} {f(r)} 0 1 1 {f(x2)} {f(y2)}Z"
+# ---- استخراج الحروف من الخط ----------------------------------------------------
+_fonts = {}
 
 
-def sparkle_d(cx, cy, r, pinch=SP_PINCH):
-    """لمعة رباعية: أربعة رؤوس تصلها منحنيات مقعّرة."""
-    c = pinch * r
-    pts = [(cx, cy - r), (cx + r, cy), (cx, cy + r), (cx - r, cy)]
-    ctl = [(cx + c, cy - c), (cx + c, cy + c), (cx - c, cy + c), (cx - c, cy - c)]
-    d = f"M{f(pts[0][0])} {f(pts[0][1])}"
-    for i in range(4):
-        (qx, qy), (nx, ny) = ctl[i], pts[(i + 1) % 4]
-        d += f"Q{f(qx)} {f(qy)} {f(nx)} {f(ny)}"
-    return d + "Z"
+def _font(name):
+    if name not in _fonts:
+        tt = TTFont(FONTS / name)
+        tt.flavor = None
+        buf = io.BytesIO()
+        tt.save(buf)
+        data = buf.getvalue()
+        _fonts[name] = (TTFont(io.BytesIO(data)), hb.Font(hb.Face(data)))
+    return _fonts[name]
 
 
-def letters_d():
-    a = math.radians(TAIL_ANG)
-    tx, ty = XM + RM * math.cos(a), -RM + RM * math.sin(a)
-    return "".join([
-        # م: عقدة مغلقة على السطر + ذيل نازل
-        f"M{f(XM)} 0A{f(RM)} {f(RM)} 0 1 1 {f(XM)} {f(-2 * RM)}A{f(RM)} {f(RM)} 0 1 1 {f(XM)} 0Z",
-        f"M{f(tx)} {f(ty)}V{f(TAIL)}",
-        # ـيـ: الوصلة ثم السنّ
-        f"M{f(XM)} 0H{f(XT)}V{f(-T)}",
-        # د: ذراع علوية، وعاء، ذيل على السطر
-        f"M{f(XD - DAL_TOP)} {f(-2 * RD)}H{f(XD)}A{f(RD)} {f(RD)} 0 0 1 {f(XD)} 0H{f(XD - LD)}",
-    ])
+def _contours(text, font):
+    """يشكّل النص بـ HarfBuzz ويعيد كل محيط مغلق مع اسم حرفه وترتيبه وحدوده (y نازل)."""
+    tt, hbfont = _font(font)
+    buf = hb.Buffer()
+    buf.add_str(text)
+    buf.guess_segment_properties()
+    hb.shape(hbfont, buf, {})
+    glyphs, order = tt.getGlyphSet(), tt.getGlyphOrder()
+    out, x = [], 0
+    for info, pos in zip(buf.glyph_infos, buf.glyph_positions):
+        name = order[info.codepoint]
+        m = (1, 0, 0, -1, x + pos.x_offset, -pos.y_offset)
+        rec = RecordingPen()
+        glyphs[name].draw(rec)
+        contour, index = [], 0
+        for op, args in rec.value:
+            contour.append((op, args))
+            if op in ("closePath", "endPath"):
+                pen, bounds = SVGPathPen(None), BoundsPen(None)
+                for o, a in contour:
+                    getattr(TransformPen(pen, m), o)(*a)
+                    getattr(TransformPen(bounds, m), o)(*a)
+                out.append(dict(glyph=name, index=index, d=pen.getCommands(), bounds=bounds.bounds))
+                contour, index = [], index + 1
+        x += pos.x_advance
+    return out, x
 
 
-DROP = drop_d(DOTS_CX + DOT_DX, DOT_Y + DROP_R * 0.35, DROP_R)
-SPARKLE = sparkle_d(DOTS_CX - DOT_DX, DOT_Y, SP_R)
+def _flatten(d, steps=32):
+    """مسار SVG مطلق (M/L/Q/C/Z) إلى نقاط — يكفي لما يكتبه SVGPathPen."""
+    toks = re.findall(r"[MLQCZ]|-?\d*\.?\d+", d)
+    pts, cur, cmd, i = [], np.zeros(2), None, 0
+    while i < len(toks):
+        if toks[i] in "MLQCZ":
+            cmd = toks[i]
+            i += 1
+            if cmd == "Z":
+                continue
+        n = {"M": 2, "L": 2, "Q": 4, "C": 6}[cmd]
+        v = np.array(toks[i:i + n], float).reshape(-1, 2)
+        i += n
+        t = np.linspace(0, 1, steps)[1:, None]
+        if cmd in "ML":
+            pts.append(v[0])
+        elif cmd == "Q":
+            pts.extend((1 - t) ** 2 * cur + 2 * (1 - t) * t * v[0] + t ** 2 * v[1])
+        else:
+            pts.extend((1 - t) ** 3 * cur + 3 * (1 - t) ** 2 * t * v[0] + 3 * (1 - t) * t ** 2 * v[1] + t ** 3 * v[2])
+        cur = v[-1]
+        if cmd == "M":
+            cmd = "L"
+    return pts
 
 
-def wordmark_g(ink, drop, sparkle):
-    return (f'<path d="{letters_d()}" fill="none" stroke="{ink}" stroke-width="{f(S)}" '
-            f'stroke-linecap="round" stroke-linejoin="round"/>'
-            f'<path d="{DROP}" fill="{drop}"/><path d="{SPARKLE}" fill="{sparkle}"/>')
+def _poly_d(geom):
+    ring = np.asarray(geom.exterior.coords)[:-1]
+    return "M" + "L".join(f"{f(x)} {f(y)}" for x, y in ring) + "Z"
 
 
-# ---- الاسم اللاتيني: حروف كبيرة أحادية السُّمك على المبدأ نفسه ---------------
-LAT_W = {"D": 0.80, "E": 0.62, "M": 0.94, "R": 0.70, "O": 1.0, "N": 0.80, " ": 0.55}
-LAT_TRACK = 0.38
+def wordmark(font=WORD_FONT, text=WORD):
+    """طبقات الكلمة: ink (الحروف، وفراغ الميم ثقب فيها)، water (القطرة)، dots (نقطتا الياء)."""
+    layers = {"ink": [], "water": [], "dots": []}
+    cs, _ = _contours(text, font)
+    for c in cs:
+        meem = c["glyph"].startswith(("uniFEE2", "meemAr"))
+        yeh = c["glyph"].startswith(("uniFEF3", "yehAr"))
+        if meem and c["index"] == 1:
+            layers["ink"].append(c["d"])
+            drop = Polygon(_flatten(c["d"])).buffer(-DROP_GAP, quad_segs=32).simplify(0.4)
+            layers["water"].append(_poly_d(drop))
+        elif yeh and c["bounds"][1] > 20:
+            layers["dots"].append(c["d"])
+        else:
+            layers["ink"].append(c["d"])
+    xs = [v for c in cs for v in (c["bounds"][0], c["bounds"][2])]
+    ys = [v for c in cs for v in (c["bounds"][1], c["bounds"][3])]
+    return {k: "".join(v) for k, v in layers.items()}, (min(xs), min(ys), max(xs), max(ys))
 
 
-def latin_d(text, c):
-    x, parts = 0.0, []
+def latin(text=LATIN, font=LATIN_FONT, track=LATIN_TRACK):
+    tt, _ = _font(font)
+    upm = tt["head"].unitsPerEm
+    parts, x, box = [], 0.0, [1e9, 1e9, -1e9, -1e9]
     for ch in text:
-        w = LAT_W[ch] * c
-        if ch == "D":
-            r = c / 2
-            parts.append(f"M{f(x)} 0V{f(-c)}H{f(x + w - r)}A{f(r)} {f(r)} 0 0 1 {f(x + w - r)} 0Z")
-        elif ch == "E":
-            parts.append(f"M{f(x + w)} {f(-c)}H{f(x)}V0H{f(x + w)}M{f(x)} {f(-c / 2)}H{f(x + w * 0.86)}")
-        elif ch == "M":
-            parts.append(f"M{f(x)} 0V{f(-c)}L{f(x + w / 2)} {f(-c * 0.3)}L{f(x + w)} {f(-c)}V0")
-        elif ch == "R":
-            r = c / 4
-            parts.append(f"M{f(x)} 0V{f(-c)}H{f(x + w - r)}A{f(r)} {f(r)} 0 0 1 {f(x + w - r)} {f(-c / 2)}H{f(x)}"
-                         f"M{f(x + w * 0.5)} {f(-c / 2)}L{f(x + w)} 0")
-        elif ch == "O":
-            r = c / 2
-            parts.append(f"M{f(x + r)} 0A{f(r)} {f(r)} 0 1 1 {f(x + r)} {f(-c)}A{f(r)} {f(r)} 0 1 1 {f(x + r)} 0Z")
-        elif ch == "N":
-            parts.append(f"M{f(x)} 0V{f(-c)}L{f(x + w)} 0V{f(-c)}")
-        x += w + (LAT_TRACK * c if ch != " " else 0)
-    return "".join(parts), x - LAT_TRACK * c
+        cs, adv = _contours(ch, font)
+        if cs:
+            parts.append(f'<path transform="translate({f(x)} 0)" d="{"".join(c["d"] for c in cs)}"/>')
+            for c in cs:
+                b = c["bounds"]
+                box = [min(box[0], b[0] + x), min(box[1], b[1]), max(box[2], b[2] + x), max(box[3], b[3])]
+        x += adv + (track * upm if ch != " " else 0)
+    return "".join(parts), tuple(box)
 
 
-LAT_C, LAT_S = 9.0, 1.7          # ارتفاع الحرف اللاتيني وسُمكه في التوقيع الأفقي
-LAT_D, LAT_WIDTH = latin_d("DEEM DRONE", LAT_C)
-
-
-def latin_g(color, x, y, c=LAT_C, s=LAT_S):
-    d = LAT_D if c == LAT_C else latin_d("DEEM DRONE", c)[0]
-    return (f'<path transform="translate({f(x)} {f(y)})" d="{d}" fill="none" stroke="{color}" '
-            f'stroke-width="{f(s)}" stroke-linecap="round" stroke-linejoin="round"/>')
-
-
-# ---- كتابة الملفات ------------------------------------------------------------
+# ---- التراكيب ------------------------------------------------------------------
 THEMES = {
-    "": dict(ink=INK, drop=WATER, sparkle=WATER, latin=INK),
-    "-white": dict(ink=WHITE, drop=WATER_LT, sparkle=GLINT, latin=WHITE),
-    "-mono": dict(ink=INK, drop=INK, sparkle=INK, latin=INK),
-    "-mono-white": dict(ink=WHITE, drop=WHITE, sparkle=WHITE, latin=WHITE),
+    "": dict(ink=INK, water=WATER, latin=INK),
+    "-white": dict(ink=WHITE, water=WATER_LT, latin=WHITE),
+    "-mono": dict(ink=INK, water=INK, latin=INK),
+    "-mono-white": dict(ink=WHITE, water=WHITE, latin=WHITE),
 }
 
 
-def doc(vb, body, label):
-    x, y, w, h = vb
-    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{f(x)} {f(y)} {f(w)} {f(h)}" '
+def word_g(L, t):
+    return (f'<path d="{L["ink"]}" fill="{t["ink"]}"/>'
+            f'<path d="{L["water"]}" fill="{t["water"]}"/>'
+            f'<path d="{L["dots"]}" fill="{t["ink"]}"/>')
+
+
+def doc(vb, body, label="ديم درون — DEEM DRONE"):
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{" ".join(f(v) for v in vb)}" '
             f'role="img" aria-label="{label}"><title>{label}</title>{body}</svg>\n')
 
 
-def box(x0, y0, x1, y1, pad):
-    return (x0 - pad, y0 - pad, x1 - x0 + 2 * pad, y1 - y0 + 2 * pad)
+def pad_box(x0, y0, x1, y1, p):
+    return (x0 - p, y0 - p, x1 - x0 + 2 * p, y1 - y0 + 2 * p)
 
 
-def wordmark_svg(t, pad=4):
-    return doc(box(WX0, WY0, WX1, WY1, pad), wordmark_g(t["ink"], t["drop"], t["sparkle"]), "ديم")
+L_WORD, (WX0, WY0, WX1, WY1) = wordmark()
+LAT_G, (LX0, LY0, LX1, LY1) = latin()
+BAND_MID = -230        # منتصف نطاق الحروف (بين خط السطر وأعلى الميم والسنّ)
+PAD = 60
 
 
-RULE_GAP = 16
+def wordmark_svg(t):
+    return doc(pad_box(WX0, WY0, WX1, WY1, PAD), word_g(L_WORD, t), "ديم")
 
 
-def lockup_svg(t, pad=4):
-    """التوقيع الأفقي: «ديم» يمينًا، ثم فاصل رفيع، ثم DEEM DRONE."""
-    rule_x = WX0 - RULE_GAP
-    lx = rule_x - RULE_GAP - LAT_WIDTH
-    cy = -RD
-    body = (wordmark_g(t["ink"], t["drop"], t["sparkle"])
-            + f'<path d="M{f(rule_x)} {f(cy - 14)}V{f(cy + 14)}" stroke="{t["latin"]}" stroke-opacity=".35" '
-              f'stroke-width="1.2" stroke-linecap="round"/>'
-            + latin_g(t["latin"], lx, cy + LAT_C / 2))
-    return doc(box(lx - LAT_S / 2, WY0, WX1, WY1, pad), body, "ديم درون — DEEM DRONE")
+def lockup_svg(t, cap=118, gap=105):
+    """التوقيع الأفقي: «ديـم» يمينًا، ثم فاصل رفيع، ثم DEEM DRONE بمحاذاة نطاق الحروف."""
+    s = cap / (LY1 - LY0)
+    lw = (LX1 - LX0) * s
+    rule_x = WX0 - gap
+    lx = rule_x - gap - lw
+    body = (word_g(L_WORD, t)
+            + f'<path d="M{f(rule_x)} {f(BAND_MID - 175)}V{f(BAND_MID + 175)}" stroke="{t["latin"]}" '
+              f'stroke-opacity=".3" stroke-width="7"/>'
+            + f'<g transform="translate({f(lx - LX0 * s)} {f(BAND_MID + cap / 2 - LY1 * s)}) scale({s:.4f})" '
+              f'fill="{t["latin"]}">{LAT_G}</g>')
+    return doc(pad_box(lx, WY0, WX1, WY1, PAD), body)
 
 
-def stacked_svg(t, pad=4, c=8.0, s=1.6):
-    """التوقيع العمودي: «ديم» وتحتها DEEM DRONE في المنتصف."""
-    _, lw = latin_d("DEEM DRONE", c)
+def stacked_svg(t, cap=150, gap=170):
+    """التوقيع العمودي: «ديـم» وتحتها DEEM DRONE في المنتصف."""
+    s = cap / (LY1 - LY0)
+    lw = (LX1 - LX0) * s
     cx = (WX0 + WX1) / 2
-    ly = WY1 + 12 + c
-    body = wordmark_g(t["ink"], t["drop"], t["sparkle"]) + latin_g(t["latin"], cx - lw / 2, ly, c, s)
-    x0, x1 = min(WX0, cx - lw / 2 - s / 2), max(WX1, cx + lw / 2 + s / 2)
-    return doc(box(x0, WY0, x1, ly + s / 2, pad), body, "ديم درون — DEEM DRONE")
+    top = WY1 + gap
+    body = word_g(L_WORD, t) + (f'<g transform="translate({f(cx - lw / 2 - LX0 * s)} {f(top - LY0 * s)}) '
+                                f'scale({s:.4f})" fill="{t["latin"]}">{LAT_G}</g>')
+    return doc(pad_box(min(WX0, cx - lw / 2), WY0, max(WX1, cx + lw / 2), top + cap, PAD), body)
 
 
-# الأيقونة: نقطتا الياء وحدهما على مربع — القطرة واللمعة
-PAIR_X0 = DOTS_CX - DOT_DX - SP_R
-PAIR_X1 = DOTS_CX + DOT_DX + DROP_R
-PAIR_Y0 = min(DOT_Y - SP_R, DOT_Y + DROP_R * 0.35 - DROP_R * DROP_K)
-PAIR_Y1 = max(DOT_Y + SP_R, DOT_Y + DROP_R * 1.35)
+L_ICON, ICON_BOX = wordmark(ICON_FONT)
 
 
-def icon_svg(tile=WATER, drop=WHITE, sparkle=WHITE, size=64, fill=0.66, radius=0.24):
-    pw, ph = PAIR_X1 - PAIR_X0, PAIR_Y1 - PAIR_Y0
-    k = size * fill / pw
-    tx = size / 2 - k * (PAIR_X0 + pw / 2)
-    ty = size / 2 - k * (PAIR_Y0 + ph / 2)
+def tile_svg(tile=INK, t=THEMES["-white"], size=1000, fill=0.7, radius=0.22):
+    """الأيقونة: الكلمة نفسها على مربع، بوزن أمتن قليلًا للأحجام الصغيرة."""
+    x0, y0, x1, y1 = ICON_BOX
+    k = size * fill / (x1 - x0)
+    tx, ty = size / 2 - k * (x0 + x1) / 2, size / 2 - k * (y0 + y1) / 2
     rect = (f'<rect width="{size}" height="{size}" rx="{f(size * radius)}" fill="{tile}"/>' if radius
             else f'<rect width="{size}" height="{size}" fill="{tile}"/>')
-    body = (rect + f'<g transform="translate({f(tx)} {f(ty)}) scale({f(k)})">'
-            f'<path d="{DROP}" fill="{drop}"/><path d="{SPARKLE}" fill="{sparkle}"/></g>')
-    return doc((0, 0, size, size), body, "ديم")
-
-
-def avatar_svg(tile=WHITE, t=THEMES[""], size=200, fill=0.62):
-    """صورة الحسابات: الكلمة داخل منطقة آمنة للقص الدائري."""
-    ww, hh = WX1 - WX0, WY1 - WY0
-    k = size * fill / ww
-    tx = size / 2 - k * (WX0 + ww / 2)
-    ty = size / 2 - k * (WY0 + hh / 2)
-    body = (f'<rect width="{size}" height="{size}" fill="{tile}"/>'
-            f'<g transform="translate({f(tx)} {f(ty)}) scale({f(k)})">'
-            f'{wordmark_g(t["ink"], t["drop"], t["sparkle"])}</g>')
-    return doc((0, 0, size, size), body, "ديم")
+    return doc((0, 0, size, size), rect + f'<g transform="translate({f(tx)} {f(ty)}) scale({k:.4f})">'
+                                          f'{word_g(L_ICON, t)}</g>', "ديم")
 
 
 def inline_snippet():
-    """النسخة المضمّنة في رأس الصفحات: الحروف بلون النص (currentColor)،
-    والنقطتان بمتغيرات CSS --logo-water و--logo-glint لتتبدّلا مع الوضع الداكن."""
-    vb = box(WX0, WY0, WX1, WY1, 0)
+    """نسخة الرأس: الحروف بلون النص (currentColor) والقطرة من متغير --logo-water."""
+    vb = pad_box(WX0, WY0, WX1, WY1, 0)
     h = 40
     word = (f'<svg class="logo__word" viewBox="{" ".join(f(v) for v in vb)}" width="{f(h * vb[2] / vb[3])}" '
-            f'height="{h}" aria-hidden="true" focusable="false">'
-            f'<path d="{letters_d()}" fill="none" stroke="currentColor" stroke-width="{f(S)}" '
-            f'stroke-linecap="round" stroke-linejoin="round"/>'
-            f'<path class="logo__drop" d="{DROP}" fill="{WATER}"/>'
-            f'<path class="logo__glint" d="{SPARKLE}" fill="{WATER}"/></svg>')
-    lvb = (-LAT_S / 2, -LAT_C - LAT_S / 2, LAT_WIDTH + LAT_S, LAT_C + LAT_S)
+            f'height="{h}" aria-hidden="true" focusable="false"><path d="{L_WORD["ink"]}{L_WORD["dots"]}" '
+            f'fill="currentColor"/><path class="logo__drop" d="{L_WORD["water"]}" fill="{WATER}"/></svg>')
+    lvb = pad_box(LX0, LY0, LX1, LY1, 0)
     lh = 9
-    latin = (f'<svg class="logo__latin" viewBox="{" ".join(f(v) for v in lvb)}" width="{f(lh * lvb[2] / lvb[3])}" '
-             f'height="{lh}" aria-hidden="true" focusable="false">'
-             f'<path d="{LAT_D}" fill="none" stroke="currentColor" stroke-width="{f(LAT_S)}" '
-             f'stroke-linecap="round" stroke-linejoin="round"/></svg>')
-    return word + "\n" + latin
+    latin_ = (f'<svg class="logo__latin" viewBox="{" ".join(f(v) for v in lvb)}" width="{f(lh * lvb[2] / lvb[3])}" '
+              f'height="{lh}" aria-hidden="true" focusable="false"><g fill="currentColor">{LAT_G}</g></svg>')
+    return word + "\n" + latin_
 
 
 def main():
     BRAND.mkdir(parents=True, exist_ok=True)
+    for old in BRAND.glob("*.svg"):
+        old.unlink()
     files = {}
     for suffix, t in THEMES.items():
         files[f"deem-logo{suffix}.svg"] = lockup_svg(t)
-        files[f"deem-wordmark{suffix}.svg"] = wordmark_svg(t)
         files[f"deem-logo-stacked{suffix}.svg"] = stacked_svg(t)
-    files["deem-icon.svg"] = icon_svg()
-    files["deem-icon-ink.svg"] = icon_svg(tile=INK, drop=WATER_LT, sparkle=GLINT)
-    files["deem-icon-square.svg"] = icon_svg(radius=0)   # مصدر apple-touch-icon: iOS يدوّر الزوايا بنفسه
-    files["deem-avatar.svg"] = avatar_svg()
-    files["deem-avatar-ink.svg"] = avatar_svg(tile=INK, t=THEMES["-white"])
+        files[f"deem-wordmark{suffix}.svg"] = wordmark_svg(t)
+    files["deem-icon.svg"] = tile_svg()
+    files["deem-icon-square.svg"] = tile_svg(radius=0)                       # مصدر apple-touch-icon
+    files["deem-avatar.svg"] = tile_svg(radius=0, fill=0.6)                   # صورة الحسابات (قص دائري)
+    files["deem-avatar-light.svg"] = tile_svg(tile=WHITE, t=THEMES[""], radius=0, fill=0.6)
     for name, text in files.items():
         (BRAND / name).write_text(text, encoding="utf-8")
-    (ROOT / "assets" / "img" / "favicon.svg").write_text(icon_svg(size=32, fill=0.72, radius=0.22), encoding="utf-8")
+    (ROOT / "assets" / "img" / "favicon.svg").write_text(tile_svg(fill=0.8), encoding="utf-8")
     print(f"wrote {len(files)} files to {BRAND.relative_to(ROOT)} + assets/img/favicon.svg")
 
 
 if __name__ == "__main__":
-    import sys
     if "--inline" in sys.argv:
         print(inline_snippet())
     else:

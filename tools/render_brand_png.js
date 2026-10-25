@@ -17,7 +17,7 @@ const JOBS = [
   ["deem-wordmark.svg", "png/deem-wordmark.png", 1000],
   ["deem-wordmark-white.svg", "png/deem-wordmark-white.png", 1000],
   ["deem-avatar.svg", "png/deem-avatar.png", 1024],
-  ["deem-avatar-ink.svg", "png/deem-avatar-ink.png", 1024],
+  ["deem-avatar-light.svg", "png/deem-avatar-light.png", 1024],
   ["deem-icon.svg", "png/deem-icon-512.png", 512],
   ["deem-icon-square.svg", "apple-touch-icon.png", 180],
 ];

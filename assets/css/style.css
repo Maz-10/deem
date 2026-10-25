@@ -61,9 +61,8 @@
   --brand-glow: #7cc3c3;
   --on-brand: #ffffff;           /* لون النص فوق --brand */
 
-  /* نقطتا الشعار — القطرة واللمعة (assets/brand) */
-  --logo-water: #1497c4;
-  --logo-glint: #1497c4;
+  /* قطرة الشعار — فراغ الميم (assets/brand) */
+  --logo-water: #1593d6;
 
   /* ألوان الفقاعات من الهوية السابقة — للّمسات (وضع التحرير) لا للنصوص */
   --bubble-blue: #5e9aaa;
@@ -123,8 +122,7 @@
     --brand-wash: #1b2830;
     --brand-glow: #4d8593;
     --on-brand: #101820;
-    --logo-water: #3fc0e6;
-    --logo-glint: #c9f1fa;
+    --logo-water: #4cc0ee;
 
     --series-1: #3987e5;
     --series-2: #d95926;
@@ -156,8 +154,7 @@
   --brand-wash: #1b2830;
   --brand-glow: #4d8593;
   --on-brand: #101820;
-  --logo-water: #3fc0e6;
-  --logo-glint: #c9f1fa;
+  --logo-water: #4cc0ee;
 
   --series-1: #3987e5;
   --series-2: #d95926;
@@ -233,15 +230,14 @@ ul, ol { padding-inline-start: 1.3em; }
 }
 .nav { display: flex; align-items: center; gap: 1rem; padding: .75rem 0; }
 
-/* الشعار: «ديم» بحروف بلون النص، ونقطتا الياء قطرة ولمعة.
-   المصدر الهندسي tools/build_brand.py — والنسخة المضمّنة تُطبع منه بـ --inline. */
-.logo { display: flex; align-items: center; gap: .85rem; color: var(--ink-1); text-decoration: none; }
-.logo__word { display: block; flex: none; width: 71.63px; height: 40px; }
+/* الشعار: «ديـم» بخط ثمانية، وفراغ الميم قطرة ماء.
+   المصدر tools/build_brand.py — والنسخة المضمّنة تُطبع منه بـ --inline. */
+.logo { display: flex; align-items: center; gap: .9rem; color: var(--ink-1); text-decoration: none; }
+.logo__word { display: block; flex: none; width: 83.1px; height: 40px; }
 .logo__drop { fill: var(--logo-water); }
-.logo__glint { fill: var(--logo-glint); }
 .logo__latin {
-  display: block; flex: none; width: 80.84px; height: 9px; box-sizing: content-box;
-  padding-block: 6px; padding-inline-start: .85rem;
+  display: block; flex: none; width: 112.4px; height: 9px; box-sizing: content-box;
+  padding-block: 6px; padding-inline-start: .9rem;
   border-inline-start: 1px solid var(--hairline); color: var(--ink-2);
 }
 
@@ -440,7 +436,7 @@ details.faq p { margin: .8rem 0 0; color: var(--ink-2); }
   margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, .14);
   display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; font-size: .87rem;
 }
-.site-footer .logo { color: #fff; --logo-water: #3fc0e6; --logo-glint: #c9f1fa; }
+.site-footer .logo { color: #fff; --logo-water: #4cc0ee; }
 .site-footer .logo__latin { color: rgba(255, 255, 255, .72); border-color: rgba(255, 255, 255, .18); }
 
 /* ==========================================================================
@@ -792,7 +788,7 @@ body.has-admin .site-header { top: 74px; }
   .btn-row .btn { width: 100%; }
   .hero__stats { margin-top: 2rem; padding-top: 1.5rem; }
   .logo__latin { display: none; }             /* السطر اللاتيني يزاحم على الشاشات الضيقة */
-  .logo__word { width: 62.68px; height: 35px; }
+  .logo__word { width: 72.68px; height: 35px; }
   .portal-bar h1 { font-size: 1.25rem; }
   .hero-figure .value { font-size: 3.2rem; }
   .compare-stat__big { font-size: 1.6rem; }
